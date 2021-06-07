@@ -19,14 +19,16 @@ class HomeMenu extends StatelessWidget {
       height: 100,
       child: ListView.separated(
         separatorBuilder: (ctx, i) {
-          return _menuItem[i].active! ? SizedBox(width: 12,) : Container();
+          return _menuItem[i].active ? SizedBox(width: 12,) : Container();
         },
         scrollDirection: Axis.horizontal,
         itemCount: _menuItem.length,
         itemBuilder: (ctx, i) {
-          return _menuItem[i].active! 
+          return _menuItem[i].active 
           ?
-          NeomorfIconButton(icons: _menuItem[i].icon!, text: _menuItem[i].name!, path: _menuItem[i].path ?? '', routePath: _menuItem[i].routePath ?? '',) 
+          Container(
+            width: 80,
+            child: NeomorfIconButton(icons: _menuItem[i].icon!, text: _menuItem[i].name!, path: _menuItem[i].path ?? '', routePath: _menuItem[i].routePath ?? '',)) 
           :
           Container();
         }

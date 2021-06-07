@@ -59,7 +59,7 @@ class _NeomorfIconButtonState extends State<NeomorfIconButton> {
           ),
         ),
         SizedBox(height: 10,),
-        Text(widget.text, style: Theme.of(context).textTheme.bodyText1,)
+        Text(widget.text, style: Theme.of(context).textTheme.bodyText1, overflow: TextOverflow.ellipsis,)
       ],
     );
   }

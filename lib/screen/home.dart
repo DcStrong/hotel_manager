@@ -20,7 +20,8 @@ class _MyHomePageState extends State<MyHomePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: ConfigColor.bgColor,
-      body: SafeArea(
+      body:
+      SafeArea(
         child: SingleChildScrollView(
           child: Column(
             mainAxisSize: MainAxisSize.max,

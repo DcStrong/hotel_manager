@@ -4,7 +4,7 @@ class MenuItem {
   String? icon;
   String? routePath;
   String? path;
-  bool? active;
+  bool active;
 
-  MenuItem({this.name, this.icon, this.path, this.active = false, this.routePath});
+  MenuItem({this.name, this.icon, this.path, required this.active, this.routePath});
 }

@@ -29,7 +29,7 @@ class MyAppState extends State<MyApp> {
     return WidgetFactoryProvider(
       child: MaterialApp(
         onGenerateRoute: RouteGenerator.generateRoute,
-        initialRoute: 'checkUserInHotel',
+        initialRoute: 'home',
         theme: ThemeData(
           fontFamily: 'MontseratMedium',
           textTheme: TextTheme(

@@ -1,4 +1,7 @@
+import 'package:dio/dio.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
+import 'package:hotel_manager/helper/message_exception.dart';
 import 'package:hotel_manager/model/animation.dart';
 import 'package:hotel_manager/model/animation_types.dart';
 import 'package:hotel_manager/model/animation_week_day.dart';
@@ -83,9 +86,9 @@ class ApiRouter {
     }
   }
 
-  static Future<List> getSectionFitnesForHome(BuildContext context) async {
+  static Future<List<CardModel>> getSectionFitnesForHome(BuildContext context) async {
     String path = 'fitnes';
-    List data = [];
+    List<CardModel> data = [];
     try {
       var response = await dio.get(path, queryParameters: {'main_page': 1});
       List responseMap = response.data['data'];
@@ -93,8 +96,9 @@ class ApiRouter {
       responseMap.forEach((element) {
         data.add(CardModel.fromJSON(element));
       });
-      if(data.length != 0)
+      if(data.length != 0) {
         context.read<HomeMenuProvider>().activateElementMenu(path);
+      }
       return data;
     } catch(e) {
       return [];
@@ -226,9 +230,9 @@ class ApiRouter {
 
       return user;
 
-    } catch (e) {
+    } on DioError catch (e) {
       print(e);
-      // throw MessageException(e.response.data['message']);
+      throw MessageException(e.response?.data['message']);
     }
   }
 
@@ -253,13 +257,12 @@ class ApiRouter {
 
       return user;
 
-    } catch(e) {
-      print(e);
-      // if(e.response.data['errors'].containsKey('phone')){
-      //   throw MessageException(e.response.data['errors']['phone'][0]);
-      // } else if(e.response.data['errors'].containsKey('email')) {
-      //   throw MessageException(e.response.data['errors']['email'][0]);
-      // }
+    } on DioError catch (e) {
+      if(e.response?.data['errors'].containsKey('phone')){
+        throw MessageException(e.response?.data['errors']['phone'][0]);
+      } else if(e.response?.data['errors'].containsKey('email')) {
+        throw MessageException(e.response?.data['errors']['email'][0]);
+      }
     }
   }
 }

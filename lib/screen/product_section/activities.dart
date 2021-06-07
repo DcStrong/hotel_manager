@@ -13,62 +13,83 @@ class ActivitiesSection extends StatefulWidget {
 }
 
 class _ActivitiesSectionState extends State<ActivitiesSection> {
-  Widget buildContent() {
-    return FutureBuilder(
-      initialData: [],
-      future: ApiRouter.getSectionActivitiesForHome(context),
-      builder: (ctx, AsyncSnapshot<List> snapshot) {
-        if(snapshot.hasData) {
-          if(snapshot.data?.length == 0) {
-            return Container();
-          }
-          return Column(
-            children: [
-              SizedBox(height: 15,),
-              GestureDetector(
-                onTap: () {
-                  Navigator.push(context, MaterialPageRoute(builder: (context) {
-                    return ScreenProduct(title: 'Бассейны',path: 'activities');
-                  }));
-                },
-                child: Container(
-                  margin: EdgeInsets.only(right: 15, left: 15, bottom: 20),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Text('Мероприятия', style: Theme.of(context).textTheme.headline1,),
-                      Image.asset('assets/icons/arrow.png', width: 8,)
-                    ],
-                  ),
-                ),
-              ),
-              Container(
-                height: 235,
-                child: ListView.builder(
-                  scrollDirection: Axis.horizontal,
-                  itemCount: snapshot.data?.length,
-                  itemBuilder: (ctx, i) {
-                    return GestureDetector(
-                      onTap: () {
-                        Navigator.push(context, MaterialPageRoute(builder: (context) {
-                          return DetailCard(id: snapshot.data![i].id, path: 'activities',);
-                        }));
-                      },
-                      child: HorizontalCard(card: snapshot.data![i])
-                    );
-                  }
-                ),
-              ),
-            ],
-          );
-        }
-        return HorizontalShimmer();
-      }
-    );
+  String _path = 'activities';
+  bool _isLoad = true;
+  List _listItem = [];
+  @override
+  void initState() { 
+    super.initState();
+    getItems();
   }
 
-  @override
-  Widget build(BuildContext context) {
-    return buildContent();
+  getItems() async {
+    List req = [];
+
+    if(_isLoad)
+      req = await ApiRouter.getSectionActivitiesForHome(context);
+
+    if(req.length == 0) {
+      setState(() {
+        _isLoad = false;
+      });
+    } else {
+      setState(() {
+        _listItem.addAll(req);
+        _isLoad = false;
+      });
+    }
   }
+  // final List<MenuItem> _menuItem = context.watch<HomeMenuProvider>().homeMenuList;
+  @override
+
+  Widget build(BuildContext context) {
+      return
+      _isLoad
+      ?
+        HorizontalShimmer()
+      :
+        _listItem.length == 0
+      ?
+        Container() 
+      :
+      Column(
+        children: [
+          SizedBox(height: 15,),
+          GestureDetector(
+            onTap: () {
+              Navigator.push(context, MaterialPageRoute(builder: (context) {
+                return ScreenProduct(title: 'Мероприятия',path: _path);
+              }));
+            },
+            child: Container(
+              margin: EdgeInsets.only(right: 15, left: 15, bottom: 20),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text('Мероприятия', style: Theme.of(context).textTheme.headline1,),
+                  Image.asset('assets/icons/arrow.png', width: 8,)
+                ],
+              ),
+            ),
+          ),
+          Container(
+            height: 235,
+            child: ListView.builder(
+              scrollDirection: Axis.horizontal,
+              itemCount: _listItem.length,
+              itemBuilder: (ctx, i) {
+                return GestureDetector(
+                  onTap: () {
+                    Navigator.push(context, MaterialPageRoute(builder: (context) {
+                      return DetailCard(id: _listItem[i].id, path: _path,);
+                    }));
+                  },
+                  child: HorizontalCard(card: _listItem[i])
+                );
+              }
+            ),
+          )
+        ],
+      );
+    }
 }

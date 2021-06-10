@@ -36,7 +36,7 @@ class _TabNavigatorState extends State<TabNavigator> {
       label: '-',
       icon: Icons.shopping_basket_outlined,
       maintainState: false,
-      root: 'test',
+      root: 'restorant',
     ),
     TabItem(
       label: '-',

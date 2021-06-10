@@ -21,22 +21,26 @@ class CardWithExcursionType extends StatelessWidget implements WidgetInterface {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(cardModel.title!, style: Theme.of(context).textTheme.headline1,),
+                Text(cardModel.title ?? '', style: Theme.of(context).textTheme.headline1,),
                 SizedBox(height: 6,),
-                Text(cardModel.subtitle!, style: Theme.of(context).textTheme.headline3,),
+                Text(cardModel.subtitle ?? '', style: Theme.of(context).textTheme.headline3,),
                 SizedBox(height: 12,),
               ],
             ),
           ),
+          if(cardModel.duration != null)
           neumorphicIconContainer(context, 'assets/icons/clock.png', cardModel.duration!),
           SizedBox(height: 6),
+          if(cardModel.price != null)
           neumorphicIconContainer(context, 'assets/icons/ruble.png', cardModel.price.toString()),
           SizedBox(height: 6),
+          if(cardModel.guide != null)
           neumorphicIconContainer(context, 'assets/icons/personal.png', cardModel.guide!),
           SizedBox(height: 6),
+          if(cardModel.phone != null)
           neumorphicIconContainer(context, 'assets/icons/telephone.png', cardModel.phone!),
           SizedBox(height: 15,),
-          HtmlWidget(cardModel.body!),
+          HtmlWidget(cardModel.body ?? ''),
       ],),
     );
   }

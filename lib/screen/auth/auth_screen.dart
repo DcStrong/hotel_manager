@@ -36,7 +36,7 @@ class _AuthScreenState extends State<AuthScreen> {
     var userJson = jsonDecode(prefs.getString('user') ?? '');
     UserModel _user = UserModel.fromJSON(userJson);
     if(_user.token != null && _user.token != '') {
-      await Navigator.pushNamed(context, 'profile');
+      await Navigator.pushNamedAndRemoveUntil(context, 'profile', (route) => false);
       setState(() {
         _isLoad = false;
       });
@@ -122,7 +122,7 @@ class _AuthScreenState extends State<AuthScreen> {
 
                   context.read<User>().setUser(result);
 
-                  Navigator.pushNamed(context, 'profile');
+                  await Navigator.pushNamedAndRemoveUntil(context, 'profile', (route) => false);
 
                 } on MessageException catch(e) {
                   ScaffoldMessenger.of(context).showSnackBar(

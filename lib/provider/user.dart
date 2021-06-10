@@ -29,6 +29,7 @@ class User with ChangeNotifier {
     if(prefs.getKeys().contains('user')) {
       var userJson = jsonDecode(prefs.getString('user') ?? '');
       _user = UserModel.fromJSON(userJson);
+      
       _user.inHotel = inHotel;
     }
   }

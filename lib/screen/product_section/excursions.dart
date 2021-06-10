@@ -13,7 +13,7 @@ class ExcursionSection extends StatefulWidget {
 }
 
 class _ExcursionSectionState extends State<ExcursionSection> {
-  String _path = 'excursion';
+  String _path = 'excursions';
   bool _isLoad = true;
   List _listItem = [];
   @override

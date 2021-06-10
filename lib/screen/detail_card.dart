@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:hotel_manager/helper/config_color.dart';
 import 'package:hotel_manager/provider/widget_factory_provider.dart';
 import 'package:hotel_manager/repository/api_router.dart';
+import 'package:shimmer/shimmer.dart';
 
 
 class DetailCard extends StatefulWidget {
@@ -15,7 +16,7 @@ class DetailCard extends StatefulWidget {
 
 class _DetailCardState extends State<DetailCard> {
   var cardModel;
-  var widgeth;
+  var widgets;
   @override
   void initState() { 
     super.initState();
@@ -26,7 +27,7 @@ class _DetailCardState extends State<DetailCard> {
     cardModel = await ApiRouter.getDetailCard(widget.id, widget.path);
     WidgetFactoryProvider widgetFactoryProvider = WidgetFactoryProvider.of(context);
     setState(() {
-      widgeth = widgetFactoryProvider.widgetFactory.createWidget(cardModel);
+      widgets = widgetFactoryProvider.widgetFactory.createWidget(cardModel);
     });
   }
 
@@ -61,11 +62,15 @@ class _DetailCardState extends State<DetailCard> {
                   Positioned(
                     child: 
                     cardModel?.image == null ?
-                    Container(
-                      child: Center(
-                        child: Icon(Icons.people_alt_rounded, color: ConfigColor.assentColor),
-                      ),
-                    ) 
+                    Shimmer.fromColors(
+                        baseColor: Colors.grey[300]!,
+                        highlightColor: Colors.grey[100]!,
+                        child: Container(
+                          width: 200,
+                          height: 200,
+                          color: Colors.black,
+                        )
+                      )
                     :
                     Image(
                       fit: BoxFit.cover,
@@ -99,7 +104,7 @@ class _DetailCardState extends State<DetailCard> {
         },
         body: SingleChildScrollView(
           physics: NeverScrollableScrollPhysics(),
-          child: widgeth 
+          child: widgets 
           ?? Container(
             child: Center(
               child: CircularProgressIndicator(),

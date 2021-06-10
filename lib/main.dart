@@ -1,3 +1,4 @@
+import 'package:flutter/services.dart';
 import 'package:flutter_neumorphic/flutter_neumorphic.dart';
 import 'package:hotel_manager/helper/config_color.dart';
 import 'package:hotel_manager/provider/home_menu.dart';
@@ -26,11 +27,23 @@ class MyAppState extends State<MyApp> {
 
   @override
   Widget build(BuildContext context) {
+
+    SystemChrome.setPreferredOrientations([
+      DeviceOrientation.portraitUp,
+      DeviceOrientation.portraitDown,
+    ]);
+    
     return WidgetFactoryProvider(
       child: MaterialApp(
         onGenerateRoute: RouteGenerator.generateRoute,
-        initialRoute: 'home',
+        initialRoute: 'checkUserInHotel',
         theme: ThemeData(
+          pageTransitionsTheme: PageTransitionsTheme(
+            builders: {
+              TargetPlatform.android: CupertinoPageTransitionsBuilder(),
+              TargetPlatform.iOS: CupertinoPageTransitionsBuilder(),
+            }
+          ),
           fontFamily: 'MontseratMedium',
           textTheme: TextTheme(
             headline1: TextStyle(

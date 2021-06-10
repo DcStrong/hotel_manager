@@ -177,7 +177,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
 
                   context.read<User>().setUser(result);
 
-                  Navigator.pushNamed(context, 'profile');
+                  Navigator.pushNamedAndRemoveUntil(context, 'profile', (route) => false);
 
                 } on MessageException catch(e) {
                   ScaffoldMessenger.of(context).showSnackBar(

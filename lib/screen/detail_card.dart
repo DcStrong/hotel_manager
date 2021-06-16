@@ -26,9 +26,10 @@ class _DetailCardState extends State<DetailCard> {
   getData() async {
     cardModel = await ApiRouter.getDetailCard(widget.id, widget.path);
     WidgetFactoryProvider widgetFactoryProvider = WidgetFactoryProvider.of(context);
-    setState(() {
-      widgets = widgetFactoryProvider.widgetFactory.createWidget(cardModel);
-    });
+    if(mounted)
+      setState(() {
+        widgets = widgetFactoryProvider.widgetFactory.createWidget(cardModel);
+      });
   }
 
   @override

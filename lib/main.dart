@@ -36,7 +36,7 @@ class MyAppState extends State<MyApp> {
     return WidgetFactoryProvider(
       child: MaterialApp(
         onGenerateRoute: RouteGenerator.generateRoute,
-        initialRoute: 'checkUserInHotel',
+        initialRoute: 'restorant',
         theme: ThemeData(
           pageTransitionsTheme: PageTransitionsTheme(
             builders: {

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
-class ResorantScreen extends StatelessWidget {
-  const ResorantScreen({Key? key}) : super(key: key);
+class RestorantDevScreen extends StatelessWidget {
+  const RestorantDevScreen({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {

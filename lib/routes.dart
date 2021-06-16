@@ -12,7 +12,9 @@ import 'package:hotel_manager/screen/product_section/pools.dart';
 import 'package:hotel_manager/screen/product_section/spa/spa_categories.dart';
 import 'package:hotel_manager/screen/product_section/stocks.dart';
 import 'package:hotel_manager/screen/profile.dart';
-import 'package:hotel_manager/screen/restorant.dart';
+import 'package:hotel_manager/screen/restorant/products.dart';
+import 'package:hotel_manager/screen/restorant/restorant.dart';
+import 'package:hotel_manager/screen/restorant/restorant_dev.dart';
 
 class RouteGenerator {
   static Route<dynamic> generateRoute(RouteSettings settings) {
@@ -46,8 +48,12 @@ class RouteGenerator {
         return MaterialPageRoute(builder: (_) => ActivitiesSection());
       case 'spaCategories':
         return MaterialPageRoute(builder: (_) => SpaCategories());
+      case 'restorant_dev':
+        return MaterialPageRoute(builder: (_) => RestorantDevScreen());
       case 'restorant':
-        return MaterialPageRoute(builder: (_) => ResorantScreen());
+        return MaterialPageRoute(builder: (_) => RestorantScreen());
+      case 'products':
+        return MaterialPageRoute(builder: (_) => ProductsScreen());
       default:
         // If there is no such named route in the switch statement, e.g. /third
         return MaterialPageRoute(

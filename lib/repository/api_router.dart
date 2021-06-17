@@ -14,7 +14,7 @@ import 'package:provider/provider.dart';
 
 class ApiRouter {
 
-  static Future<List> getSectionStocksForHome(BuildContext context) async {
+  static Future<List> getSectionStocksForHome() async {
     String path = 'stocks';
     List data = [];
     try {
@@ -24,15 +24,14 @@ class ApiRouter {
       responseMap.forEach((element) {
         data.add(CardModel.fromJSON(element));
       });
-      if(data.length != 0)
-        context.read<HomeMenuProvider>().activateElementMenu(path);
+
       return data;
     } catch(e) {
       return [];
     }
   }
 
-  static Future<List> getSectionPoolForHome(BuildContext context) async {
+  static Future<List> getSectionPoolForHome() async {
     String path = 'pools';
     List data = [];
     try {
@@ -42,15 +41,14 @@ class ApiRouter {
       responseMap.forEach((element) {
         data.add(CardModel.fromJSON(element));
       });
-      if(data.length != 0)
-        context.read<HomeMenuProvider>().activateElementMenu(path);
+
       return data;
     } catch(e) {
       return [];
     }
   }
 
-  static Future<List> getSectionActivitiesForHome(BuildContext context) async {
+  static Future<List> getSectionActivitiesForHome() async {
     String path = 'activities';
     List data = [];
     try {
@@ -60,15 +58,14 @@ class ApiRouter {
       responseMap.forEach((element) {
         data.add(CardModel.fromJSON(element));
       });
-      if(data.length != 0)
-        context.read<HomeMenuProvider>().activateElementMenu(path);
+
       return data;
     } catch(e) {
       return [];
     }
   }
 
-  static Future<List> getSectionExcursionsForHome(BuildContext context) async {
+  static Future<List> getSectionExcursionsForHome() async {
     String path = 'excursions';
     List data = [];
     try {
@@ -78,15 +75,14 @@ class ApiRouter {
       responseMap.forEach((element) {
         data.add(CardModel.fromJSON(element));
       });
-      if(data.length != 0)
-        context.read<HomeMenuProvider>().activateElementMenu(path);
+
       return data;
     } catch(e) {
       return [];
     }
   }
 
-  static Future<List<CardModel>> getSectionFitnesForHome(BuildContext context) async {
+  static Future<List<CardModel>> getSectionFitnesForHome() async {
     String path = 'fitnes';
     List<CardModel> data = [];
     try {
@@ -96,16 +92,14 @@ class ApiRouter {
       responseMap.forEach((element) {
         data.add(CardModel.fromJSON(element));
       });
-      if(data.length != 0) {
-        context.read<HomeMenuProvider>().activateElementMenu(path);
-      }
+
       return data;
     } catch(e) {
       return [];
     }
   }
 
-  static Future<List> getSectionSpaForHome(BuildContext context) async {
+  static Future<List> getSectionSpaForHome() async {
     String path = 'spa-procedures';
     List data = [];
     try {
@@ -115,8 +109,7 @@ class ApiRouter {
       responseMap.forEach((element) {
         data.add(CardModel.fromJSON(element));
       });
-      if(data.length != 0)
-        context.read<HomeMenuProvider>().activateElementMenu(path);
+      
       return data;
     } catch(e) {
       return [];

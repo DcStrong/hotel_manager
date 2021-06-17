@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:hotel_manager/components/shimmer/horizontal_shimmer.dart';
 import 'package:hotel_manager/components/widget/card/horizontal_card.dart';
+import 'package:hotel_manager/provider/home_menu.dart';
 import 'package:hotel_manager/repository/api_router.dart';
 import 'package:hotel_manager/screen/detail_card.dart';
 import 'package:hotel_manager/screen/screen_product.dart';
+import 'package:provider/provider.dart';
 
 class ActivitiesSection extends StatefulWidget {
   ActivitiesSection({Key? key}) : super(key: key);
@@ -26,13 +28,14 @@ class _ActivitiesSectionState extends State<ActivitiesSection> {
     List req = [];
 
     if(_isLoad)
-      req = await ApiRouter.getSectionActivitiesForHome(context);
+      req = await ApiRouter.getSectionActivitiesForHome();
 
     if(req.length == 0) {
       setState(() {
         _isLoad = false;
       });
     } else {
+      context.read<HomeMenuProvider>().activateElementMenu(_path);
       setState(() {
         _listItem.addAll(req);
         _isLoad = false;

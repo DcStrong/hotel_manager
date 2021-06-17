@@ -29,13 +29,14 @@ class _StocksSectionState extends State<StocksSection> {
     List req = [];
 
     if(_isLoad)
-      req = await ApiRouter.getSectionStocksForHome(context);
+      req = await ApiRouter.getSectionStocksForHome();
 
     if(req.length == 0) {
       setState(() {
         _isLoad = false;
       });
     } else {
+      context.read<HomeMenuProvider>().activateElementMenu(_path);
       setState(() {
         _listItem.addAll(req);
         _isLoad = false;

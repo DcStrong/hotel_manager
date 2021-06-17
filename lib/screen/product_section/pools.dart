@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:hotel_manager/components/shimmer/horizontal_shimmer.dart';
 import 'package:hotel_manager/components/widget/card/horizontal_card.dart';
+import 'package:hotel_manager/provider/home_menu.dart';
 import 'package:hotel_manager/repository/api_router.dart';
 import 'package:hotel_manager/screen/detail_card.dart';
 import 'package:hotel_manager/screen/screen_product.dart';
+import 'package:provider/provider.dart';
 
 class PoolsSection extends StatefulWidget {
   PoolsSection({Key ?key}) : super(key: key);
@@ -26,7 +28,7 @@ class _PoolsSectionState extends State<PoolsSection> {
     List req = [];
 
     if(_isLoad)
-      req = await ApiRouter.getSectionPoolForHome(context);
+      req = await ApiRouter.getSectionPoolForHome();
 
     if(req.length == 0) {
       setState(() {
@@ -34,6 +36,7 @@ class _PoolsSectionState extends State<PoolsSection> {
       });
     } else {
       setState(() {
+        context.read<HomeMenuProvider>().activateElementMenu(_path);
         _listItem.addAll(req);
         _isLoad = false;
       });

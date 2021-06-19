@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:hotel_manager/components/buttons/button_elevated.dart';
+import 'package:hotel_manager/components/widget/form/event_form.dart';
 import 'package:hotel_manager/components/widget/html_widget.dart';
 import 'package:hotel_manager/components/widget/neumorphic_icon_container.dart';
 import 'package:hotel_manager/interface/widget_interface.dart';
@@ -37,6 +39,12 @@ class CardWithActivityType extends StatelessWidget implements WidgetInterface {
           SizedBox(height: 15,),
           if(cardModel.price != null)
           neumorphicIconContainer(context, 'assets/icons/clock.png', cardModel.price ?? ''),
+          buttonElevatedCenter('Записаться', context, () {
+            Navigator.push(context, MaterialPageRoute(builder: (context) {
+              return EventForm(activityId: cardModel.id,);
+            }));
+          }),
+          SizedBox(height: 30,),
       ],),
     );
   }

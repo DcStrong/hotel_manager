@@ -4,6 +4,7 @@ import 'package:hotel_manager/components/buttons/button_elevated.dart';
 import 'package:hotel_manager/components/buttons/leading_button_back.dart';
 import 'package:hotel_manager/helper/config_color.dart';
 import 'package:hotel_manager/helper/helper.dart';
+import 'package:hotel_manager/model/activiti_form.dart';
 import 'package:hotel_manager/model/spa_form.dart';
 import 'package:hotel_manager/model/user.dart';
 import 'package:hotel_manager/provider/user.dart';
@@ -13,16 +14,15 @@ import 'package:mask_text_input_formatter/mask_text_input_formatter.dart';
 import 'package:provider/provider.dart';
 
 
-class SpaForm extends StatefulWidget {
-  final int? categoryId;
-  final int? procedureId;
-  SpaForm({Key? key, this.procedureId, this.categoryId}) : super(key: key);
+class EventForm extends StatefulWidget {
+  final int? activityId;
+  EventForm({Key? key, this.activityId}) : super(key: key);
 
   @override
-  _SpaFormState createState() => _SpaFormState();
+  _EventFormState createState() => _EventFormState();
 }
 
-class _SpaFormState extends State<SpaForm> {
+class _EventFormState extends State<EventForm> {
   var maskFormatter = new MaskTextInputFormatter(mask: '+# (###) ###-##-##', filter: { "#": RegExp(r'[0-9]') });
   UserModel? _user;
 
@@ -72,8 +72,10 @@ class _SpaFormState extends State<SpaForm> {
     );
 
     if (picked != null) {
+      String minute = picked.minute < 10 ? '0${picked.minute}' : '${picked.minute}';
+      String hour = picked.hour < 10 ? '0${picked.hour}' : '${picked.hour}';
       setState(() {
-        _timeController.text = '${picked.hour}:${picked.minute}';
+        _timeController.text = '$hour:$minute';
       });
     }
   }
@@ -170,16 +172,15 @@ class _SpaFormState extends State<SpaForm> {
                 FocusScope.of(context).unfocus();
                 String dateString = _dateController.text + ' ' + _timeController.text;
                 DateTime tempDate = new DateFormat("MM/dd/yyyy HH:mm").parse(dateString);
-                SpaFormModel form = new SpaFormModel(
+                ActivitiFormModel form = new ActivitiFormModel(
                   phone: maskFormatter.getUnmaskedText(),
-                  categoryId: widget.categoryId ?? 0,
+                  activityId: widget.activityId!,
                   date: tempDate,
                   firstName: _firstNameController.text,
                   lastName: _lastNameController.text,
-                  procedureId: widget.procedureId ?? 0,
-                  ownerId: _user?.id
+                  ownerId: _user?.id,
                 );
-                helper.showProgress(context, ApiRouter.createRequestForSpa(form));
+                helper.showProgress(context, ApiRouter.createRequestForActiviti(form));
                 // await ApiRouter.createRequestForSpa(form);
               }),
               SizedBox(height: 15,),

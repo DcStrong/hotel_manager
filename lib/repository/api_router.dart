@@ -2,6 +2,7 @@ import 'package:dio/dio.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:hotel_manager/helper/message_exception.dart';
+import 'package:hotel_manager/model/activiti_form.dart';
 import 'package:hotel_manager/model/animation.dart';
 import 'package:hotel_manager/model/animation_types.dart';
 import 'package:hotel_manager/model/animation_week_day.dart';
@@ -272,15 +273,36 @@ class ApiRouter {
      'procedure_id': formModel.procedureId
    };
    
-   try {
-    var response =  await dio.post('spa/create_request', queryParameters: params);
-    if (response.statusCode == 200) {
-      return true;
+    try {
+      var response =  await dio.post('spa/create_request', queryParameters: params);
+      if (response.statusCode == 200) {
+        return true;
+      }
+      return false;
+    } on DioError catch (e) {
+      return false;
     }
-    return false;
-   } on DioError catch (e) {
-     return false;
-   }
+  }
 
+  static Future<bool> createRequestForActiviti(ActivitiFormModel formModel) async {
+   Map<String, dynamic> params = {
+     'owner_id': formModel.ownerId,
+     'date_time': formModel.date,
+     'first_name': formModel.lastName,
+     'second_name': formModel.firstName,
+     'phone': formModel.phone,
+     'comment': formModel.comments ?? '',
+     'activity_id': formModel.activityId,
+   };
+   
+    try {
+      var response =  await dio.post('activities/create_request', queryParameters: params);
+      if (response.statusCode == 200) {
+        return true;
+      }
+      return false;
+    } on DioError catch (e) {
+      return false;
+    }
   }
 }

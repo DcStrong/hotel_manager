@@ -29,9 +29,14 @@ class CardWithActivityType extends StatelessWidget implements WidgetInterface {
             ),
           ),
           HtmlWidget(cardModel.body ?? ''),
-          SizedBox(height: 15,),
           if(cardModel.place != null)
           neumorphicIconContainer(context, 'assets/icons/clock.png', cardModel.place ?? ''),
+          SizedBox(height: 15,),
+          if(cardModel.time != null)
+          neumorphicIconContainer(context, 'assets/icons/clock.png', cardModel.time ?? ''),
+          SizedBox(height: 15,),
+          if(cardModel.price != null)
+          neumorphicIconContainer(context, 'assets/icons/clock.png', cardModel.price ?? ''),
       ],),
     );
   }

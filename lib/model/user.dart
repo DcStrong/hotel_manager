@@ -1,5 +1,6 @@
 
 class UserModel {
+  int? id;
   String? token;
   String? name;
   String? lastName;
@@ -8,9 +9,10 @@ class UserModel {
   int? userRole;
   bool? inHotel;
 
-  UserModel({this.token, this.name, this.lastName, this.email, this.phone, this.userRole, this.inHotel});
+  UserModel({this.id, this.token, this.name, this.lastName, this.email, this.phone, this.userRole, this.inHotel});
 
   factory UserModel.fromJSON(Map<String, dynamic> jsonMap) => UserModel(
+    id: jsonMap['id'],
     token: jsonMap['token'] ?? null,
     name: jsonMap['first_name'] ?? null,
     lastName: jsonMap['second_name'] ?? null,
@@ -21,6 +23,7 @@ class UserModel {
 
    Map<String, dynamic> toJson() {
     return {
+      'id': id,
       'token': token,
       'first_name': name,
       'second_name': lastName,

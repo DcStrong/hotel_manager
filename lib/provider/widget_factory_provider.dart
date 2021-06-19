@@ -1,9 +1,9 @@
 import 'package:flutter/cupertino.dart';
-import 'package:hotel_manager/helper/creatorWidget/creater_widget_activity.dart';
-import 'package:hotel_manager/helper/creatorWidget/creater_widget_spa.dart';
-import 'package:hotel_manager/helper/creatorWidget/creater_widget_excursion.dart';
-import 'package:hotel_manager/helper/creatorWidget/creater_widget_text.dart';
-import 'package:hotel_manager/helper/factory/widget_factory.dart';
+import 'package:hotel_manager/creatorWidget/creater_widget_activity.dart';
+import 'package:hotel_manager/creatorWidget/creater_widget_excursion.dart';
+import 'package:hotel_manager/creatorWidget/creater_widget_spa.dart';
+import 'package:hotel_manager/creatorWidget/creater_widget_text.dart';
+import 'package:hotel_manager/factory/widget_factory.dart';
 
 class WidgetFactoryProvider extends InheritedWidget {
   final WidgetFactory widgetFactory = new WidgetFactory();

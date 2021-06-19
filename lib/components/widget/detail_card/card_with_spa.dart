@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:hotel_manager/components/buttons/button_elevated.dart';
+import 'package:hotel_manager/components/widget/form/spa_form.dart';
 import 'package:hotel_manager/components/widget/html_widget.dart';
 import 'package:hotel_manager/components/widget/neumorphic_icon_container.dart';
+import 'package:hotel_manager/helper/helper.dart';
 import 'package:hotel_manager/interface/widget_interface.dart';
 import 'package:hotel_manager/model/card_with_spa.dart';
 
@@ -40,9 +42,18 @@ class CardWithSpaType extends StatelessWidget implements WidgetInterface {
           neumorphicIconContainer(context, 'assets/icons/personal.png', cardModel.master!),
           SizedBox(height: 6),
           if(cardModel.phone != null)
-          neumorphicIconContainer(context, 'assets/icons/telephone.png', cardModel.phone!),
+          InkWell(
+            onTap: () {
+              helper.launchUrl("tel:${cardModel.phone}");
+            },
+            child: neumorphicIconContainer(context, 'assets/icons/telephone.png', cardModel.phone!)
+          ),
           SizedBox(height: 15,),
-          buttonElevatedCenter('Записаться', context, () {Navigator.pushNamed(context, 'spa_form');}),
+          buttonElevatedCenter('Записаться', context, () {
+            Navigator.push(context, MaterialPageRoute(builder: (context) {
+              return SpaForm(procedureId: cardModel.id, categoryId: cardModel.categoryId,);
+            }));
+          }),
           SizedBox(height: 15,),
           HtmlWidget(cardModel.body ?? ''),
       ],),

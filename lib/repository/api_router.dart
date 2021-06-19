@@ -7,6 +7,7 @@ import 'package:hotel_manager/model/animation_types.dart';
 import 'package:hotel_manager/model/animation_week_day.dart';
 import 'package:hotel_manager/model/card_model.dart';
 import 'package:hotel_manager/model/feedback_service.dart';
+import 'package:hotel_manager/model/spa_form.dart';
 import 'package:hotel_manager/model/user.dart';
 import 'package:hotel_manager/provider/home_menu.dart';
 import 'package:hotel_manager/repository/dio.dart';
@@ -257,5 +258,29 @@ class ApiRouter {
         throw MessageException(e.response?.data['errors']['email'][0]);
       }
     }
+  }
+
+  static Future<bool> createRequestForSpa(SpaFormModel formModel) async {
+   Map<String, dynamic> params = {
+     'owner_id': formModel.ownerId,
+     'date_time': formModel.date,
+     'first_name': formModel.lastName,
+     'second_name': formModel.firstName,
+     'phone': formModel.phone,
+     'comment': formModel.comments ?? '',
+     'category_id': formModel.categoryId,
+     'procedure_id': formModel.procedureId
+   };
+   
+   try {
+    var response =  await dio.post('spa/create_request', queryParameters: params);
+    if (response.statusCode == 200) {
+      return true;
+    }
+    return false;
+   } on DioError catch (e) {
+     return false;
+   }
+
   }
 }

@@ -8,6 +8,8 @@ class CardWithActivityModel implements ModelInterface {
   String? body;
   String? date;
   String? place;
+  String? price;
+  String? time;
   int? active;
 
   CardWithActivityModel({
@@ -19,12 +21,16 @@ class CardWithActivityModel implements ModelInterface {
     this.date, 
     this.place,
     this.active,
+    this.price,
+    this.time
   });
 
   factory CardWithActivityModel.fromJSON(Map<String, dynamic> jsonMap) => CardWithActivityModel(
     id: jsonMap['id'] ?? null,
     title: jsonMap['title'] ?? null,
     active: jsonMap['active'] ?? 0,
+    time: jsonMap['time'] ?? null,
+    price: jsonMap['price'] ?? null,
     place: jsonMap['place'] ?? null,
     date: jsonMap['date'] ?? null,
     image: jsonMap['preview'] ?? null,

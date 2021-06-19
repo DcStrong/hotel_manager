@@ -2,11 +2,13 @@ import 'package:dio/dio.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:hotel_manager/helper/message_exception.dart';
+import 'package:hotel_manager/model/activiti_form.dart';
 import 'package:hotel_manager/model/animation.dart';
 import 'package:hotel_manager/model/animation_types.dart';
 import 'package:hotel_manager/model/animation_week_day.dart';
 import 'package:hotel_manager/model/card_model.dart';
 import 'package:hotel_manager/model/feedback_service.dart';
+import 'package:hotel_manager/model/spa_form.dart';
 import 'package:hotel_manager/model/user.dart';
 import 'package:hotel_manager/provider/home_menu.dart';
 import 'package:hotel_manager/repository/dio.dart';
@@ -14,7 +16,7 @@ import 'package:provider/provider.dart';
 
 class ApiRouter {
 
-  static Future<List> getSectionStocksForHome(BuildContext context) async {
+  static Future<List> getSectionStocksForHome() async {
     String path = 'stocks';
     List data = [];
     try {
@@ -24,15 +26,14 @@ class ApiRouter {
       responseMap.forEach((element) {
         data.add(CardModel.fromJSON(element));
       });
-      if(data.length != 0)
-        context.read<HomeMenuProvider>().activateElementMenu(path);
+
       return data;
     } catch(e) {
       return [];
     }
   }
 
-  static Future<List> getSectionPoolForHome(BuildContext context) async {
+  static Future<List> getSectionPoolForHome() async {
     String path = 'pools';
     List data = [];
     try {
@@ -42,15 +43,14 @@ class ApiRouter {
       responseMap.forEach((element) {
         data.add(CardModel.fromJSON(element));
       });
-      if(data.length != 0)
-        context.read<HomeMenuProvider>().activateElementMenu(path);
+
       return data;
     } catch(e) {
       return [];
     }
   }
 
-  static Future<List> getSectionActivitiesForHome(BuildContext context) async {
+  static Future<List> getSectionActivitiesForHome() async {
     String path = 'activities';
     List data = [];
     try {
@@ -60,15 +60,14 @@ class ApiRouter {
       responseMap.forEach((element) {
         data.add(CardModel.fromJSON(element));
       });
-      if(data.length != 0)
-        context.read<HomeMenuProvider>().activateElementMenu(path);
+
       return data;
     } catch(e) {
       return [];
     }
   }
 
-  static Future<List> getSectionExcursionsForHome(BuildContext context) async {
+  static Future<List> getSectionExcursionsForHome() async {
     String path = 'excursions';
     List data = [];
     try {
@@ -78,15 +77,14 @@ class ApiRouter {
       responseMap.forEach((element) {
         data.add(CardModel.fromJSON(element));
       });
-      if(data.length != 0)
-        context.read<HomeMenuProvider>().activateElementMenu(path);
+
       return data;
     } catch(e) {
       return [];
     }
   }
 
-  static Future<List<CardModel>> getSectionFitnesForHome(BuildContext context) async {
+  static Future<List<CardModel>> getSectionFitnesForHome() async {
     String path = 'fitnes';
     List<CardModel> data = [];
     try {
@@ -96,16 +94,14 @@ class ApiRouter {
       responseMap.forEach((element) {
         data.add(CardModel.fromJSON(element));
       });
-      if(data.length != 0) {
-        context.read<HomeMenuProvider>().activateElementMenu(path);
-      }
+
       return data;
     } catch(e) {
       return [];
     }
   }
 
-  static Future<List> getSectionSpaForHome(BuildContext context) async {
+  static Future<List> getSectionSpaForHome() async {
     String path = 'spa-procedures';
     List data = [];
     try {
@@ -115,8 +111,7 @@ class ApiRouter {
       responseMap.forEach((element) {
         data.add(CardModel.fromJSON(element));
       });
-      if(data.length != 0)
-        context.read<HomeMenuProvider>().activateElementMenu(path);
+      
       return data;
     } catch(e) {
       return [];
@@ -263,6 +258,51 @@ class ApiRouter {
       } else if(e.response?.data['errors'].containsKey('email')) {
         throw MessageException(e.response?.data['errors']['email'][0]);
       }
+    }
+  }
+
+  static Future<bool> createRequestForSpa(SpaFormModel formModel) async {
+   Map<String, dynamic> params = {
+     'owner_id': formModel.ownerId,
+     'date_time': formModel.date,
+     'first_name': formModel.lastName,
+     'second_name': formModel.firstName,
+     'phone': formModel.phone,
+     'comment': formModel.comments ?? '',
+     'category_id': formModel.categoryId,
+     'procedure_id': formModel.procedureId
+   };
+   
+    try {
+      var response =  await dio.post('spa/create_request', queryParameters: params);
+      if (response.statusCode == 200) {
+        return true;
+      }
+      return false;
+    } on DioError catch (e) {
+      return false;
+    }
+  }
+
+  static Future<bool> createRequestForActiviti(ActivitiFormModel formModel) async {
+   Map<String, dynamic> params = {
+     'owner_id': formModel.ownerId,
+     'date_time': formModel.date,
+     'first_name': formModel.lastName,
+     'second_name': formModel.firstName,
+     'phone': formModel.phone,
+     'comment': formModel.comments ?? '',
+     'activity_id': formModel.activityId,
+   };
+   
+    try {
+      var response =  await dio.post('activities/create_request', queryParameters: params);
+      if (response.statusCode == 200) {
+        return true;
+      }
+      return false;
+    } on DioError catch (e) {
+      return false;
     }
   }
 }

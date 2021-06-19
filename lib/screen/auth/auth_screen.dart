@@ -33,7 +33,16 @@ class _AuthScreenState extends State<AuthScreen> {
 
   initUser() async {
     final SharedPreferences prefs = await _prefs;
-    var userJson = jsonDecode(prefs.getString('user') ?? '');
+    var json = prefs.getString('user');
+    var userJson;
+    if(json != null) {
+      userJson = jsonDecode(json);
+    } else {
+      setState(() {
+        _isLoad = false;
+      });
+      return;
+    }
     UserModel _user = UserModel.fromJSON(userJson);
     if(_user.token != null && _user.token != '') {
       await Navigator.pushNamedAndRemoveUntil(context, 'profile', (route) => false);
@@ -100,6 +109,8 @@ class _AuthScreenState extends State<AuthScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        leadingWidth: 0,
+        leading: Container(),
         title: Text('Авторизация', style: Theme.of(context).textTheme.headline1,),
         shadowColor: Colors.transparent,
       ),

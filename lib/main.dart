@@ -6,6 +6,7 @@ import 'package:hotel_manager/provider/user.dart';
 import 'package:hotel_manager/provider/widget_factory_provider.dart';
 import 'package:hotel_manager/routes.dart';
 import 'package:provider/provider.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
 
 void main() => runApp(
    MultiProvider(
@@ -35,9 +36,23 @@ class MyAppState extends State<MyApp> {
     
     return WidgetFactoryProvider(
       child: MaterialApp(
+        localizationsDelegates: [
+          GlobalMaterialLocalizations.delegate
+        ],
         onGenerateRoute: RouteGenerator.generateRoute,
         initialRoute: 'restorant',
         theme: ThemeData(
+          inputDecorationTheme: InputDecorationTheme(
+            enabledBorder: UnderlineInputBorder(      
+              borderSide: BorderSide(color: ConfigColor.additionalColor),   
+            ),  
+            focusedBorder: UnderlineInputBorder(
+              borderSide: BorderSide(color: ConfigColor.assentColor, width: 3),
+            ),
+            border: UnderlineInputBorder(
+              borderSide: BorderSide(color: ConfigColor.additionalColor),
+            ),
+          ),
           pageTransitionsTheme: PageTransitionsTheme(
             builders: {
               TargetPlatform.android: CupertinoPageTransitionsBuilder(),

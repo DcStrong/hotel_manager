@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:hotel_manager/components/buttons/leading_button_back.dart';
 import 'package:hotel_manager/components/shimmer/vertical_shimmer.dart';
 import 'package:hotel_manager/components/widget/card/vertical_card.dart';
 import 'package:hotel_manager/helper/config_color.dart';
@@ -15,12 +16,7 @@ class SpaCategories extends StatelessWidget {
         title: Text('SPA-категории', style: Theme.of(context).textTheme.headline1,),
         backgroundColor: ConfigColor.bgColor,
         shadowColor: Colors.transparent,
-        leading: IconButton(
-          onPressed: () {
-            Navigator.pop(context);
-          },
-          icon: Icon(Icons.arrow_back_ios, color: ConfigColor.assentColor),
-        )
+        leading: iconButtonBack(context),
       ),
       backgroundColor: ConfigColor.bgColor,
       body: Container(

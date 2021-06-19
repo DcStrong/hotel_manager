@@ -11,6 +11,7 @@ class CardWithSpaModel implements ModelInterface {
   String? phone;
   String? master;
   int? price;
+  int? categoryId;
   List? slider;
 
   CardWithSpaModel({
@@ -25,12 +26,13 @@ class CardWithSpaModel implements ModelInterface {
     this.email, 
     this.master, 
     this.time,
+    this.categoryId,
   });
 
   factory CardWithSpaModel.fromJSON(Map<String, dynamic> jsonMap) => CardWithSpaModel(
     id: jsonMap['id'] ?? null,
     title: jsonMap['title'] ?? null,
-    price: jsonMap['price'] ?? null,
+    price: jsonMap['price'] != null ? int.parse(jsonMap['price'].toString()) : null,
     phone: jsonMap['phone'] ?? null,
     master: jsonMap['master_name'] ?? null,
     time: jsonMap['duration'] ?? null,
@@ -38,6 +40,7 @@ class CardWithSpaModel implements ModelInterface {
     image: jsonMap['preview'] ?? null,
     subtitle: jsonMap['small_description'] ?? null,
     body: jsonMap['description'] ?? null,
+    categoryId: jsonMap['category_id'] ?? null,
     slider: jsonMap['slider'] ?? []
   );
 }

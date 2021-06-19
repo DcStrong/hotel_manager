@@ -16,6 +16,8 @@ import 'package:hotel_manager/screen/restorant/products.dart';
 import 'package:hotel_manager/screen/restorant/restorant.dart';
 import 'package:hotel_manager/screen/restorant/restorant_dev.dart';
 
+import 'components/widget/form/spa_form.dart';
+
 class RouteGenerator {
   static Route<dynamic> generateRoute(RouteSettings settings) {
     // final Map arguments;
@@ -54,6 +56,8 @@ class RouteGenerator {
         return MaterialPageRoute(builder: (_) => RestorantScreen());
       case 'products':
         return MaterialPageRoute(builder: (_) => ProductsScreen());
+      case 'spa_form':
+        return MaterialPageRoute(builder: (_) => SpaForm());
       default:
         // If there is no such named route in the switch statement, e.g. /third
         return MaterialPageRoute(

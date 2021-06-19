@@ -41,7 +41,7 @@ class _TabNavigatorState extends State<TabNavigator> {
     TabItem(
       label: '-',
       icon: Icons.home_outlined,
-      maintainState: false,
+      maintainState: true,
       root: 'home',
     ),
     TabItem(

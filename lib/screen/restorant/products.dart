@@ -45,10 +45,10 @@ class _ProductsScreenState extends State<ProductsScreen> {
     });
   }
 
-  allertDialog() {
+  allertDialog(BuildContext context) {
     showDialog<String>(
       context: context,
-      builder: (BuildContext context) => AlertDialog(
+      builder: (BuildContext _context) => AlertDialog(
         content: const Text('Для того что бы продолжить, вам необходимо авторизироваться'),
         actions: <Widget>[
           TextButton(
@@ -56,7 +56,10 @@ class _ProductsScreenState extends State<ProductsScreen> {
             child: Text('Закрыть'),
           ),
           TextButton(
-            onPressed: () => Navigator.pushNamed(context, 'auth'),
+            onPressed: () {
+              Navigator.pop(_context);
+              Navigator.pushNamed(context, 'profile', );
+            },
             child: Text('ОК'),
           ),
         ],
@@ -212,7 +215,7 @@ class _ProductsScreenState extends State<ProductsScreen> {
                           if (_user?.token != null) {
                             store.addBasketProduct(product);
                           } else {
-                            allertDialog();
+                            allertDialog(context);
                           }
                         },
                         priceSale: product.discountPrice.toString()

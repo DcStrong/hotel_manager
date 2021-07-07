@@ -37,7 +37,7 @@ class _ProfileState extends State<Profile> {
     UserModel user = Provider.of<User>(context, listen: false).userProfile;
     if(user.token == null && mounted) {
 
-      await Navigator.pushNamed(context, 'auth');
+      await Navigator.pushNamedAndRemoveUntil(context, 'auth', (route) => false);
     }else{
       setState(() {
         _user = user;
@@ -93,7 +93,10 @@ class _ProfileState extends State<Profile> {
         ],
         // title: Text('Профиль', style: Theme.of(context).textTheme.headline1),
       ),
-      body: SingleChildScrollView(
+      body: _user == null ? 
+      Center(child: CircularProgressIndicator(),)
+      :
+      SingleChildScrollView(
         child: Padding(
           padding: EdgeInsets.only(left: 15.0, right: 15.0),
           child: Column(

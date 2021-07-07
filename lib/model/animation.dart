@@ -55,11 +55,11 @@ class AnimationTimes {
 
   factory AnimationTimes.fromMap(Map json) {
     AnimationTimes animationTime = AnimationTimes(
-    id: json['id'] ?? null,
-    daysOfWeekId: json['days_of_week_id'] ?? null,
-    startTime: timeParseDateTime(json['begin_time']) ?? null,
-    endTime: timeParseDateTime(json['end_time']) ?? null,
-  );
+      id: json['id'] ?? null,
+      daysOfWeekId: json['days_of_week_id'] ?? null,
+      startTime: timeParseDateTime(json['begin_time']) ?? null,
+      endTime: timeParseDateTime(json['end_time']) ?? null,
+    );
     return animationTime;
   }
 }

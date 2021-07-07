@@ -12,7 +12,11 @@ import 'package:hotel_manager/screen/product_section/pools.dart';
 import 'package:hotel_manager/screen/product_section/spa/spa_categories.dart';
 import 'package:hotel_manager/screen/product_section/stocks.dart';
 import 'package:hotel_manager/screen/profile.dart';
-import 'package:hotel_manager/screen/restorant.dart';
+import 'package:hotel_manager/screen/restorant/basket.dart';
+import 'package:hotel_manager/screen/restorant/basket_order.dart';
+import 'package:hotel_manager/screen/restorant/products.dart';
+import 'package:hotel_manager/screen/restorant/restorant.dart';
+import 'package:hotel_manager/screen/restorant/restorant_dev.dart';
 
 import 'components/widget/form/spa_form.dart';
 
@@ -48,10 +52,16 @@ class RouteGenerator {
         return MaterialPageRoute(builder: (_) => ActivitiesSection());
       case 'spaCategories':
         return MaterialPageRoute(builder: (_) => SpaCategories());
+      case 'restorant_dev':
+        return MaterialPageRoute(builder: (_) => RestorantDevScreen());
       case 'restorant':
-        return MaterialPageRoute(builder: (_) => ResorantScreen());
+        return MaterialPageRoute(builder: (_) => RestorantScreen());
       case 'spa_form':
         return MaterialPageRoute(builder: (_) => SpaForm());
+      case 'basket':
+        return MaterialPageRoute(builder: (_) => BasketScreen());
+      case 'basket_order':
+        return MaterialPageRoute(builder: (_) => BasketOrder());
       default:
         // If there is no such named route in the switch statement, e.g. /third
         return MaterialPageRoute(

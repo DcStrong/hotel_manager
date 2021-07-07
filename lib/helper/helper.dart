@@ -57,6 +57,8 @@ class Helper {
     if(result)
       Navigator.of(context).pop();
   }
+
+  
 }
 
 Helper helper = Helper();

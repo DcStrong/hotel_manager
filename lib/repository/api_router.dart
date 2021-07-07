@@ -6,8 +6,11 @@ import 'package:hotel_manager/model/activiti_form.dart';
 import 'package:hotel_manager/model/animation.dart';
 import 'package:hotel_manager/model/animation_types.dart';
 import 'package:hotel_manager/model/animation_week_day.dart';
+import 'package:hotel_manager/model/basket_produts.dart';
 import 'package:hotel_manager/model/card_model.dart';
 import 'package:hotel_manager/model/feedback_service.dart';
+import 'package:hotel_manager/model/food.dart';
+import 'package:hotel_manager/model/restourant.dart';
 import 'package:hotel_manager/model/spa_form.dart';
 import 'package:hotel_manager/model/user.dart';
 import 'package:hotel_manager/provider/home_menu.dart';
@@ -195,10 +198,18 @@ class ApiRouter {
     return data;
   }
 
-
-  static Future<Map<String, dynamic>> getDetailCardData() async {
-    var response = await dio.get('https://606893c90add490017340377.mockapi.io/product/2');
-    return response.data;
+  static Future<List<AnimationModel>> getAllAnimations() async {
+    List<AnimationModel> data = [];
+    var response = await dio.get('animations', queryParameters: {'for_adults': 1});
+    print(response);
+    List responseMap = response.data['data'];
+    if(responseMap.length == 0) {
+      return data;
+    }
+    responseMap.forEach((e) { 
+      data.add(AnimationModel.fromJSON(e));
+    });
+    return data;
   }
 
   static Future<List<FeedbackService>> getServiceInfo() async {
@@ -305,4 +316,79 @@ class ApiRouter {
       return false;
     }
   }
+
+  static Future<List<Restourant>> getRestorantList() async {
+    List<Restourant> data = [];
+    var response = await dio.get('client/restaurants');
+    print(response);
+    List responseMap = response.data['data'];
+    responseMap.forEach((element) {
+      data.add(Restourant.fromJSON(element));
+    });
+    return data;
+  }
+
+  static Future<List<Food>> getRestourantFoods(int id, {int? categoryId}) async {
+    List<Food> data = [];
+    Map<String, dynamic> params = {
+     'restaurant_id': id,
+     'food_category_id': categoryId,
+     'page': 1,
+   };
+
+    var response = await dio.get('client/foods', queryParameters: params);
+    List responseMap = response.data['data']['data'];
+    responseMap.forEach((element) {
+      data.add(Food.fromJSON(element));
+    });
+
+    return data;
+  }
+
+  static Future<List<BasketProducts>> addBasketFood(int id, String token) async {
+    Map<String, dynamic> params = {
+     'food_id': id,
+    };
+
+    List<BasketProducts> data = [];
+
+    dio.options.headers['Authorization'] = "Bearer " + token;
+    var response = await dio.get('client/basket_add_food', queryParameters: params);
+    List responseMap = response.data['data'];
+    responseMap.forEach((element) {
+      data.add(BasketProducts.fromJSON(element));
+    });
+
+    return data;
+  }
+
+  static Future<List<BasketProducts>> removeBasketFood(int id, String token) async {
+    Map<String, dynamic> params = {
+     'food_id': id,
+    };
+
+    List<BasketProducts> data = [];
+
+    dio.options.headers['Authorization'] = "Bearer " + token;
+    var response = await dio.get('client/basket_delete_food', queryParameters: params);
+    List responseMap = response.data['data'];
+    responseMap.forEach((element) {
+      data.add(BasketProducts.fromJSON(element));
+    });
+
+    return data;
+  }
+
+  static Future<List<BasketProducts>> getBasketFood(String token) async {
+    List<BasketProducts> data = [];
+    dio.options.headers['Authorization'] = "Bearer " + token;
+    var response = await dio.get('client/get_basket');
+    List responseMap = response.data['data'];
+    responseMap.forEach((element) {
+      data.add(BasketProducts.fromJSON(element));
+    });
+
+    return data;
+  }
+
 }

@@ -69,7 +69,7 @@ class _AnimationScreenState extends State<AnimationScreen> with SingleTickerProv
     setState(() {
       loadingList = true;
     });
-    List<AnimationModel> result = await ApiRouter.getAnimations(forAdults, dayOfWeekId);
+    List<AnimationModel> result = await ApiRouter.getAllAnimations();
     setState(() {
       loadingList = false;
       animationList = sortAnimationList(result);
@@ -102,7 +102,7 @@ class _AnimationScreenState extends State<AnimationScreen> with SingleTickerProv
             padding: EdgeInsets.zero,
             duration: Duration(milliseconds: 300),
             onPressed: () {
-              getAnimation(forAdults: adults, dayOfWeekId: weekDay.id!);
+              // getAnimation(forAdults: adults, dayOfWeekId: weekDay.id!);
               for(int i = 0; i < statusDayOfWeek.length; i++) {
                 setState(() {
                   statusDayOfWeek[i] = false;

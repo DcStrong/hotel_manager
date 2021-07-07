@@ -48,13 +48,12 @@ class _TabNavigatorState extends State<TabNavigator> {
       label: '-',
       icon: Icons.account_circle_outlined,
       maintainState: false,
-      root: 'auth',
+      root: 'profile',
     ),
   ];
 
   void selectTab(int index, {Map ?arguments}) {
     if (index != TabNavigator.currentTab.value) {
-      //tabs[index].key.currentState.popUntil((route) => route.settings.name == tabs[index].root);
       TabNavigator.changeValue(index);
     }
   }
@@ -87,22 +86,7 @@ class _TabNavigatorState extends State<TabNavigator> {
           );
         },
       ),
-      // child: ValueListenableBuilder(
-      //     valueListenable: TabNavigator.currentTab,
-      //     builder: (BuildContext context, int value, Widget _) {
-      //       return Scaffold(
-      //         backgroundColor: Colors.white,
-      //         body: IndexedStack(
-      //           index: value,
-      //           children: tabs.map((e) => e.page).toList(),
-      //         ),
-      //         bottomNavigationBar: BottomNavigation(
-      //           onSelectTab: selectTab,
-      //           tabs: tabs,
-      //         ),
-      //       );
-      //     },
-      //   ),
+
     );
   }
 }

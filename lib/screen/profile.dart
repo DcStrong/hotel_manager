@@ -1,9 +1,13 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:hotel_manager/components/buttons/button_text.dart';
+import 'package:hotel_manager/helper/helper.dart';
 import 'package:hotel_manager/model/feedback_service.dart';
 import 'package:hotel_manager/model/user.dart';
 import 'package:hotel_manager/provider/user.dart';
 import 'package:hotel_manager/repository/api_router.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'dart:core';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:provider/provider.dart';
@@ -19,14 +23,6 @@ class Profile extends StatefulWidget {
 class _ProfileState extends State<Profile> {
   final TextEditingController textController = TextEditingController();
   final MaskTextInputFormatter formatter = MaskTextInputFormatter(mask: "+# (###) ###-##-##");
-
-  void launchUrl(String url) async {
-  if (await canLaunch(url)) {
-    launch(url);
-  } else {
-    throw "Could not launch $url";
-  }
-}
 
   @override
   void initState() {
@@ -57,7 +53,7 @@ class _ProfileState extends State<Profile> {
       children: [
         Text(name, style: Theme.of(context).textTheme.headline2,),
         buttonText(formattedPhoneNumber, context, isPadding: false, func: () {
-          launchUrl("tel:$phone");
+          helper.launchUrl("tel:$phone");
         }),
       ],
     );
@@ -71,6 +67,15 @@ class _ProfileState extends State<Profile> {
       appBar: AppBar(
         leading: Container(),
         shadowColor: Colors.transparent,
+        actions: [
+          IconButton(onPressed: () async {
+            Future<SharedPreferences> _prefs = SharedPreferences.getInstance();
+            final SharedPreferences prefs = await _prefs;
+            await prefs.remove('user');
+            Navigator.pushNamed(context, 'auth');
+          },
+          icon: Icon(Icons.exit_to_app))
+        ],
         // title: Text('Профиль', style: Theme.of(context).textTheme.headline1),
       ),
       body: SingleChildScrollView(

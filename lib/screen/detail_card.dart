@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:hotel_manager/components/buttons/leading_button_back.dart';
 import 'package:hotel_manager/helper/config_color.dart';
 import 'package:hotel_manager/provider/widget_factory_provider.dart';
 import 'package:hotel_manager/repository/api_router.dart';
@@ -33,18 +34,19 @@ class _DetailCardState extends State<DetailCard> {
   }
 
   @override
+  void dispose() {
+    // TODO: implement dispose
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         title: Text(cardModel?.title ?? '', style: Theme.of(context).textTheme.headline1,),
         shadowColor: Colors.transparent,
         backgroundColor: ConfigColor.bgColor,
-        leading: IconButton(
-          onPressed: () {
-            Navigator.pop(context);
-          },
-          icon: Icon(Icons.arrow_back_ios, color: ConfigColor.assentColor),
-        )
+        leading: iconButtonBack(context),
       ),
       backgroundColor: ConfigColor.bgColor,
       body: NestedScrollView(

@@ -23,37 +23,10 @@ class _AuthScreenState extends State<AuthScreen> {
   final _formKey = GlobalKey<FormState>();
   TextEditingController _authController = TextEditingController();
   TextEditingController _authPasswordController = TextEditingController();
-  bool _isLoad = true;
 
   @override
   void initState() { 
     super.initState();
-    initUser();
-  }
-
-  initUser() async {
-    final SharedPreferences prefs = await _prefs;
-    var json = prefs.getString('user');
-    var userJson;
-    if(json != null) {
-      userJson = jsonDecode(json);
-    } else {
-      setState(() {
-        _isLoad = false;
-      });
-      return;
-    }
-    UserModel _user = UserModel.fromJSON(userJson);
-    if(_user.token != null && _user.token != '') {
-      await Navigator.pushNamedAndRemoveUntil(context, 'profile', (route) => false);
-      setState(() {
-        _isLoad = false;
-      });
-    } else {
-      setState(() {
-        _isLoad = false;
-      });
-    }
   }
 
   Widget authForm() {
@@ -115,8 +88,6 @@ class _AuthScreenState extends State<AuthScreen> {
         shadowColor: Colors.transparent,
       ),
       body:
-      _isLoad ?
-      Center(child: CircularProgressIndicator(backgroundColor: ConfigColor.assentColor,),) :
       Container(
         padding: EdgeInsets.all(20),
         child: ListView(

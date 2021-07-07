@@ -23,16 +23,33 @@ class Profile extends StatefulWidget {
 class _ProfileState extends State<Profile> {
   final TextEditingController textController = TextEditingController();
   final MaskTextInputFormatter formatter = MaskTextInputFormatter(mask: "+# (###) ###-##-##");
-
+  UserModel? _user;
   @override
   void initState() {
     super.initState();
     getService();
+    WidgetsBinding.instance!.addPostFrameCallback((_) {
+      initUser();
+    });
+  }
+
+  initUser() async {
+    UserModel user = Provider.of<User>(context, listen: false).userProfile;
+    if(user.token == null && mounted) {
+
+      await Navigator.pushNamed(context, 'auth');
+    }else{
+      setState(() {
+        _user = user;
+      });
+    }
+
   }
 
   getService() {
     ApiRouter.getServiceInfo();
   }
+
   Widget rowNameAndDescription(String name, String description) {
     return Padding(
       padding: EdgeInsets.only(bottom: 8.0),
@@ -62,17 +79,15 @@ class _ProfileState extends State<Profile> {
 
   @override
   Widget build(BuildContext context) {
-    UserModel _user = context.watch<User>().userProfile;
     return Scaffold(
       appBar: AppBar(
         leading: Container(),
         shadowColor: Colors.transparent,
         actions: [
           IconButton(onPressed: () async {
-            Future<SharedPreferences> _prefs = SharedPreferences.getInstance();
-            final SharedPreferences prefs = await _prefs;
-            await prefs.remove('user');
-            Navigator.pushNamed(context, 'auth');
+            context.read<User>().removeUser();
+            initUser();
+              // if( _user.token == null ) Navigator.pushNamed(context, 'auth');
           },
           icon: Icon(Icons.exit_to_app))
         ],
@@ -97,15 +112,16 @@ class _ProfileState extends State<Profile> {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Text(_user.name!, style: Theme.of(context).textTheme.headline2,),
+                        Text(_user?.name ?? '', style: Theme.of(context).textTheme.headline2,),
                         SizedBox(height: 6,),
-                        Text(_user.lastName!, style: Theme.of(context).textTheme.headline2,),
+                        Text(_user?.lastName ?? '', style: Theme.of(context).textTheme.headline2,),
                         SizedBox(height: 6,),
-                        Text(_user.phone!, style: Theme.of(context).textTheme.headline2,),
+                        Text(_user?.phone ?? '', style: Theme.of(context).textTheme.headline2,),
                         SizedBox(height: 6,),
-                        Text(_user.email!, style: Theme.of(context).textTheme.headline2,),
+                        Text(_user?.email ?? '', style: Theme.of(context).textTheme.headline2,),
                         SizedBox(height: 6,),
-                        Text(_user.inHotel! ? 'В отеле' : 'Не в отеле', style: Theme.of(context).textTheme.headline2,),
+                        if(_user?.inHotel ?? false) 
+                        Text(_user!.inHotel! ? 'В отеле' : 'Не в отеле', style: Theme.of(context).textTheme.headline2,),
                       ],
                     ),
                   )

@@ -1,6 +1,7 @@
 import 'package:flutter/services.dart';
 import 'package:flutter_neumorphic/flutter_neumorphic.dart';
 import 'package:hotel_manager/helper/config_color.dart';
+import 'package:hotel_manager/provider/basket_product.dart';
 import 'package:hotel_manager/provider/home_menu.dart';
 import 'package:hotel_manager/provider/user.dart';
 import 'package:hotel_manager/provider/widget_factory_provider.dart';
@@ -13,6 +14,7 @@ void main() => runApp(
       providers: [
         ChangeNotifierProvider(create: (_) => User()),
         ChangeNotifierProvider(create: (_) => HomeMenuProvider()),
+        ChangeNotifierProvider(create: (_) => Basket()),
       ],
       child:  MyApp(),
     ),
@@ -40,7 +42,7 @@ class MyAppState extends State<MyApp> {
           GlobalMaterialLocalizations.delegate
         ],
         onGenerateRoute: RouteGenerator.generateRoute,
-        initialRoute: 'restorant',
+        initialRoute: 'checkUserInHotel',
         theme: ThemeData(
           inputDecorationTheme: InputDecorationTheme(
             enabledBorder: UnderlineInputBorder(      

@@ -2,6 +2,7 @@ class Restourant {
   int id;
   String preview;
   String title;
+  String? description;
   String? openTime;
   String? closeTime;
   String? deliveryTime;
@@ -13,6 +14,7 @@ class Restourant {
     required this.title,
     required this.preview,
     this.openTime,
+    this.description,
     this.closeTime,
     this.deliveryTime,
     required this.cuisines
@@ -22,6 +24,7 @@ class Restourant {
     id: jsonMap['id'],
     title: jsonMap['title'],
     preview: jsonMap['preview'] ?? '',
+    description: jsonMap['descriptions'],
     openTime: jsonMap['open_time'] ?? 0,
     closeTime: jsonMap['close_time'] ?? 0,
     deliveryTime: jsonMap['delivery_time'] ?? 0,

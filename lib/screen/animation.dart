@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_neumorphic/flutter_neumorphic.dart';
+import 'package:hotel_manager/components/buttons/leading_button_back.dart';
 import 'package:hotel_manager/helper/config_color.dart';
 import 'package:hotel_manager/model/animation_week_day.dart';
 import 'package:hotel_manager/repository/api_router.dart';
@@ -15,6 +16,7 @@ class AnimationScreen extends StatefulWidget {
 class _AnimationScreenState extends State<AnimationScreen> with SingleTickerProviderStateMixin {
   List<AnimationWeekDay> weekDayList = [];
   List<AnimationModel> animationList = [];
+  List<AnimationModel> animationListAdult = [];
   int weekDayId = 1;
   int adults = 0;
   bool loadingList = true;
@@ -34,8 +36,8 @@ class _AnimationScreenState extends State<AnimationScreen> with SingleTickerProv
     super.initState();
     _tabController = TabController(length: 2, vsync: this);
     _tabController?.addListener(_handleTabSelection);
-    // getAnimationType();
-    getAnimation(dayOfWeekId: weekDayId, forAdults: adults);
+    getAnimation(forAdults: adults);
+    getWeekDay();
   }
 
   @override
@@ -50,36 +52,35 @@ class _AnimationScreenState extends State<AnimationScreen> with SingleTickerProv
         setState(() {
           adults = 0;
         });
-        getAnimation(forAdults: 0, dayOfWeekId: weekDayId);
+        getAnimation(forAdults: 0);
         break;
       case 1:
         setState(() {
           adults = 1;
         });
-        getAnimation(forAdults: 1, dayOfWeekId: weekDayId);
+        getAnimation(forAdults: 1);
         break;
     }
   }
 
-  getAnimationType() async {
-    var animationType = await ApiRouter.getAnimationType();
+  getWeekDay() async {
+    var result = await ApiRouter.getDayWeekAnimation();
+    setState(() {
+      weekDayList = result;
+    });
   }
 
-  getAnimation({required int forAdults, required int dayOfWeekId,}) async {
+  getAnimation({required int forAdults}) async {
     setState(() {
       loadingList = true;
     });
-    List<AnimationModel> result = await ApiRouter.getAllAnimations();
+    List<AnimationModel> result = await ApiRouter.getAllAnimations(adults);
     setState(() {
       loadingList = false;
+      if(adults == 1) {
+        animationListAdult = sortAnimationList(result);
+      }
       animationList = sortAnimationList(result);
-    });
-  }
-
-  getDayWeek() async {
-    var weekDay = await ApiRouter.getDayWeekAnimation();
-    setState(() {
-      weekDayList = weekDay;
     });
   }
 
@@ -145,6 +146,7 @@ class _AnimationScreenState extends State<AnimationScreen> with SingleTickerProv
         animationTimes.place = animations[i].place;
         animationTimes.startTime = animations[i].animationTimes![j].startTime;
         animationTimes.endTime = animations[i].animationTimes![j].endTime;
+        animationTimes.dayOfWeekId = animations[i].animationTimes![j].daysOfWeekId;
         sortList.add(animationTimes);
       }
     }
@@ -154,18 +156,38 @@ class _AnimationScreenState extends State<AnimationScreen> with SingleTickerProv
 
   animationItem(AnimationModel animation) {
     return Container(
-      height: 50,
+      padding: EdgeInsets.all(10),
       child:  Row(
-        mainAxisAlignment: MainAxisAlignment.spaceAround,
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-        Row(
-          children: [
-            Text('${animation.startTime} - ', style: Theme.of(context).textTheme.headline1!.copyWith(fontSize: 14),),
-            Text(animation.endTime ?? '', style: Theme.of(context).textTheme.headline1!.copyWith(fontSize: 14)),
-          ],
-        ),
-        Text(animation.title ?? '', style: Theme.of(context).textTheme.headline3!.copyWith(fontSize: 14)),
-        Text('(${animation.place})', style: Theme.of(context).textTheme.headline3!.copyWith(fontSize: 14))
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Text('${animation.startTime}', style: Theme.of(context).textTheme.headline1!.copyWith(fontSize: 14),),
+              Text(' - ', style: Theme.of(context).textTheme.headline1!.copyWith(fontSize: 14),),
+              Text(animation.endTime ?? '', style: Theme.of(context).textTheme.headline1!.copyWith(fontSize: 14)),
+            ],
+          ),
+          SizedBox(width: 10,),
+          Expanded(
+            child: Container(
+              child: Text(
+                '${animation.title} (${animation.place})', 
+                style: Theme.of(context).textTheme.headline3!.copyWith(fontSize: 14),
+                textAlign: TextAlign.start,
+              ),
+            ),
+          ),
+
+          // Row(
+          //   children: [
+          //     Text(
+          //       '${animation.title} animation. titleanimation. titleanimation.titleanimation.title' ?? '', 
+          //       style: Theme.of(context).textTheme.headline3!.copyWith(fontSize: 14)
+          //     ),
+          //     Text('(${animation.place})', style: Theme.of(context).textTheme.headline3!.copyWith(fontSize: 14))
+          //   ],
+          // ),
       ],)
     );
   }
@@ -174,8 +196,10 @@ class _AnimationScreenState extends State<AnimationScreen> with SingleTickerProv
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        title: Text('Расписание', style: Theme.of(context).textTheme.headline1,),
         shadowColor: Colors.transparent,
         backgroundColor: ConfigColor.bgColor,
+        leading: iconButtonBack(context),
       ),
       body:
       Column(
@@ -199,82 +223,31 @@ class _AnimationScreenState extends State<AnimationScreen> with SingleTickerProv
           ),
           Container(
             height: 80,
-            child: FutureBuilder(
-              future: ApiRouter.getDayWeekAnimation(),
-              builder: (ctx, AsyncSnapshot<List> snapshot) {
-                print(snapshot);
-                if(snapshot.hasData) { 
-                  return ListView.builder(
-                    scrollDirection: Axis.horizontal,
-                    itemCount: snapshot.data?.length,
-                    itemBuilder: (ctx, i) {
-                      return weekDayButton(snapshot.data?[i], statusDayOfWeek[i], i);
-                    }
-                  );
-                }
-                return Center(
-                  child: CircularProgressIndicator(backgroundColor: ConfigColor.assentColor,),
-                );
-              },
+            child: ListView.builder(
+              scrollDirection: Axis.horizontal,
+              itemCount: weekDayList.length,
+              itemBuilder: (ctx, i) {
+                return weekDayButton(weekDayList[i], statusDayOfWeek[i], i);
+              }
             )
           ),
           Expanded(
-            child: TabBarView(
-              controller: _tabController,
-              children: [
-                SingleChildScrollView(
-                  child: Column(
-                    children: [
-                      Container(
-                        height: 400,
-                        child: loadingList
-                        ?
-                        Center(
-                          child: CircularProgressIndicator(backgroundColor: ConfigColor.assentColor,),
-                        )
-                        :
-                        animationList.length == 0 ?
-                        Center(
-                          child: Text('Список анимаций не найден'),
-                        ) :
-                        ListView.builder(
-                          itemCount: animationList.length,
-                          itemBuilder: (ctx, i) {
-                            return animationItem(animationList[i]);
-                          }
-                        ),
-                      )
-                    ],
-                  ),
-                ),
-                SingleChildScrollView(
-                  child: Column(
-                    children: [
-                      Container(
-                        height: 400,
-                        child: loadingList
-                        ?
-                        Center(
-                          child: CircularProgressIndicator(backgroundColor: ConfigColor.assentColor,),
-                        )
-                        :
-                        animationList.length == 0 ?
-                        Center(
-                          child: Text('Список анимаций не найден'),
-                        ) :
-                        ListView.builder(
-                          itemCount: animationList.length,
-                          itemBuilder: (ctx, i) {
-                            return animationItem(animationList[i]);
-                          }
-                        ),
-                      )
-                    ],
-                  ),
-                ),
-              ],
+            child: loadingList ? Center(child: CircularProgressIndicator(),) :
+            ListView.builder(
+              shrinkWrap: true,
+              itemCount: animationList.length,
+              itemBuilder: (ctx, i) {
+                return
+                  animationList[i].dayOfWeekId! == weekDayId 
+                  ?
+                    adults == 1 
+                  ?
+                    animationItem(animationListAdult[i]) 
+                  :
+                    animationItem(animationList[i]) : Container();
+              }
             ),
-          ),
+          )
         ],
       ),
     );

@@ -12,12 +12,13 @@ class HorizontalCard extends StatefulWidget {
 }
 
 class _HorizontalCardState extends State<HorizontalCard> {
-  double width = 285.0;
-  double height = 200.0;
-  double imageHeight = 133.0;
-
   @override
   Widget build(BuildContext context) {
+    double width = MediaQuery.of(context).size.width;
+    double widthCard = 280;
+    double height = widget.card.subtitle != null ? width * 0.6 : width * 0.5;
+    double imageHeight =  widget.card.subtitle != null ? width * 0.4 : width * 0.35;
+
     return Column(
       children: [
         Container(
@@ -31,16 +32,16 @@ class _HorizontalCardState extends State<HorizontalCard> {
             ),
             child: Container(
               // padding: EdgeInsets.all(2),
-              width: this.width, height: this.height,
+              width: widthCard, height: height,
               child: Column(
               mainAxisSize: MainAxisSize.max,
               children: [
                 Container(
                   padding: EdgeInsets.all(3),
-                  height: this.imageHeight,
+                  height: imageHeight,
                   child: ClipRRect(
                     borderRadius: BorderRadius.only(topLeft: Radius.circular(12), topRight: Radius.circular(12)),
-                    child: Image.network(widget.card.image!, fit: BoxFit.fitWidth, width: this.width)
+                    child: Image.network(widget.card.image!, fit: BoxFit.fitWidth, width: width)
                   ),
                 ),
                 Expanded(
@@ -56,12 +57,13 @@ class _HorizontalCardState extends State<HorizontalCard> {
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
                         Container(
-                          width: 240,
-                          child: Text(widget.card.title ?? '', style: Theme.of(context).textTheme.headline2, overflow: TextOverflow.ellipsis,)
+                          width: widthCard * 0.75,
+                          child: Text(widget.card.title ?? '', style: Theme.of(context).textTheme.headline1, overflow: TextOverflow.ellipsis,)
                         ),
                         SizedBox(height: 4,),
+                        if(widget.card.subtitle != null)
                         Container(
-                          width: 240,
+                          width: widthCard * 0.75,
                           child: Text(widget.card.subtitle ?? '', style: Theme.of(context).textTheme.bodyText1, overflow: TextOverflow.ellipsis,))
                       ],),
                       Image.asset('assets/icons/arrow.png', width: 8,)

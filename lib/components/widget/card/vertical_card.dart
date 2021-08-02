@@ -17,7 +17,9 @@ class _VerticalCardState extends State<VerticalCard> {
   @override
   Widget build(BuildContext context) {
     double width = MediaQuery.of(context).size.width;
-    double height = width * 0.54;
+    double height = widget.card.subtitle != null ? width * 0.6 : width * 0.5;
+    double imageHeight =  widget.card.subtitle != null ? width * 0.4 : width * 0.35;
+
     return Column(
       children: [
         Container(
@@ -31,7 +33,8 @@ class _VerticalCardState extends State<VerticalCard> {
             ),
             child: Container(
               // padding: EdgeInsets.all(2),
-              width: width, height: height,
+              width: width, 
+              height: height,
               child: Column(
               mainAxisSize: MainAxisSize.max,
               children: [
@@ -40,7 +43,18 @@ class _VerticalCardState extends State<VerticalCard> {
                   height: imageHeight,
                   child: ClipRRect(
                     borderRadius: BorderRadius.only(topLeft: Radius.circular(12), topRight: Radius.circular(12)),
-                    child: Image.network(widget.card.image!, fit: BoxFit.fitWidth, width: width)
+                    child: Image.network(
+                      widget.card.image ?? '', fit: BoxFit.fitWidth, width: width,
+                      errorBuilder: (BuildContext context, Object exception, StackTrace? stackTrace) {
+                        return Center(
+                          child: Image.asset(
+                            'assets/img/image_not_found.jpg',
+                            width: width,
+                            fit: BoxFit.cover,
+                          )
+                        );
+                      },
+                    )
                   ),
                 ),
                 Expanded(
@@ -56,11 +70,14 @@ class _VerticalCardState extends State<VerticalCard> {
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
                         Container(
-                          width: 300,
-                          child: Text(widget.card.title ?? '', style: Theme.of(context).textTheme.headline2,overflow: TextOverflow.ellipsis,)
+                          width: width * 0.75,
+                          child: Text(widget.card.title ?? '', style: Theme.of(context).textTheme.headline1, overflow: TextOverflow.ellipsis,)
                         ),
                         widget.card.subtitle != null ?
-                        Text(widget.card.subtitle ?? '', style: Theme.of(context).textTheme.bodyText1,)
+                        Container(
+                          width: width * 0.75,
+                          child: Text(widget.card.subtitle ?? '', style: Theme.of(context).textTheme.bodyText1, overflow: TextOverflow.ellipsis,)
+                        )
                         : Container()
                       ],),
                       Image.asset('assets/icons/arrow.png', width: 8,)

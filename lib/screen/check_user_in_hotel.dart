@@ -24,7 +24,10 @@ class _CheckUserInHotelState extends State<CheckUserInHotel> {
           ), 
           SizedBox(height: 70,),
           Center(
-            child: Text('Здравствуйте! \nУточните пожалуйста, Вы сейчас \nнаходитесь в отеле?', textAlign: TextAlign.center, style: Theme.of(context).textTheme.headline2),
+            child: Container(
+              padding: EdgeInsets.all(10),
+              child: Text('Здравствуйте! \nУточните пожалуйста, Вы сейчас \nнаходитесь в отеле?', textAlign: TextAlign.center, style: Theme.of(context).textTheme.headline2)
+            ),
           ),
           SizedBox(height: 100,),
           ButtonAnswer(),

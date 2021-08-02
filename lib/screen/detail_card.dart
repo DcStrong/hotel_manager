@@ -78,8 +78,16 @@ class _DetailCardState extends State<DetailCard> {
                     Image(
                       fit: BoxFit.cover,
                       image: NetworkImage(
-                        cardModel.image,
+                        cardModel?.image,
                       ),
+                      errorBuilder: (BuildContext context, Object exception, StackTrace? stackTrace) {
+                        return Center(
+                          child: Image.asset(
+                            'assets/img/image_not_found.jpg',
+                            fit: BoxFit.cover,
+                          )
+                        );
+                      },
                     ),
                     top: 0,
                     left: 0,

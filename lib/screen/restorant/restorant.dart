@@ -1,14 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:hotel_manager/components/buttons/leading_button_back.dart';
+import 'package:hotel_manager/components/shimmer/vertical_shimmer.dart';
 import 'package:hotel_manager/components/widget/basketNavBar.dart';
-import 'package:hotel_manager/components/widget/card/vertical_card.dart';
-import 'package:hotel_manager/components/widget/card/vertical_card_restourant.dart';
+import 'package:hotel_manager/components/widget/card/vartical_card_restourant.dart';
 import 'package:hotel_manager/helper/config_color.dart';
-import 'package:hotel_manager/model/card_model.dart';
 import 'package:hotel_manager/model/restourant.dart';
-import 'package:hotel_manager/provider/basket_product.dart';
-import 'package:hotel_manager/provider/user.dart';
 import 'package:hotel_manager/repository/api_router.dart';
-import 'package:provider/provider.dart';
 
 class RestorantScreen extends StatefulWidget {
   RestorantScreen({Key? key}) : super(key: key);
@@ -18,6 +15,7 @@ class RestorantScreen extends StatefulWidget {
 }
 
 class _RestorantScreenState extends State<RestorantScreen> {
+  bool _isLoad = true;
 
   List<Restourant> restourantList = [];
 
@@ -30,8 +28,12 @@ class _RestorantScreenState extends State<RestorantScreen> {
 
   getRestorantList() async {
     List<Restourant> res = await ApiRouter.getRestorantList();
+    if(res.length != 0)
+      setState(() {
+        restourantList = res;
+      });
     setState(() {
-      restourantList = res;
+      _isLoad = false;
     });
   }
 
@@ -40,18 +42,25 @@ class _RestorantScreenState extends State<RestorantScreen> {
     return Scaffold(
       appBar: AppBar(
         title: Text('Рестораны', style: Theme.of(context).textTheme.headline1,),
+        shadowColor: Colors.transparent,
+        backgroundColor: ConfigColor.bgColor,
       ),
-      body: SafeArea(
-        child: Padding(
-          padding: const EdgeInsets.only(top: 10.0, left: 15, right: 15),
+      body:
+      _isLoad
+      ?
+        VerticalShimmer()
+      :
+        restourantList.length == 0
+      ?
+        Container()
+      :
+      SafeArea(
+        child: Container(
           child: ListView.builder(
             itemCount: restourantList.length,
             itemBuilder: (ctx, i) {
-              return Padding(
-                padding: EdgeInsets.only(bottom: 40.0),
-                child: VerticalCardRestourant(
-                    restourant: restourantList[i]
-                  ),
+              return VerticalCardRestourant(
+                restourant: restourantList[i]
               );
             }
           ),

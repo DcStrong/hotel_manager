@@ -22,14 +22,14 @@ Widget buttonElevatedCenter(String text, BuildContext context, Function func) {
         },
         child: Padding(
           padding: const EdgeInsets.all(10.0),
-          child: Text(text, style: Theme.of(context).textTheme.headline1?.copyWith(color: Colors.white)),
+          child: Text(text, style: Theme.of(context).textTheme.headline3?.copyWith(color: Colors.white)),
         ),
       )
     ),
   );
 }
 
-Widget buttonElevatedFullForPrice(String price, BuildContext context, Function func, {String? priceSale}) {
+Widget buttonElevatedFullForPrice(int price, BuildContext context, Function func, {int? priceSale}) {
   final ButtonStyle raisedButtonStyle = ElevatedButton.styleFrom(
     onPrimary: Colors.black87,
     primary: ConfigColor.assentColor,
@@ -49,13 +49,25 @@ Widget buttonElevatedFullForPrice(String price, BuildContext context, Function f
           func();
         },
         child: Padding(
-          padding: const EdgeInsets.all(10.0),
+          padding: const EdgeInsets.all(5.0),
           child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              Text('${price} ₽', style: Theme.of(context).textTheme.headline2?.copyWith(color: Colors.white, fontWeight: FontWeight.w600)),
+              Text(
+                '${price} ₽', 
+                style: Theme.of(context).textTheme.headline2?.copyWith(color: Colors.white, fontWeight: FontWeight.w600, fontSize: 12)
+              ),
               if (priceSale != null)
-                Text(priceSale, style: Theme.of(context).textTheme.headline2?.copyWith(color: Colors.white, decoration: TextDecoration.lineThrough, fontSize: 13)),
+                Row(
+                  children: [
+                    SizedBox(width: 5,),
+                    Text(
+                      '5000', 
+                      style: Theme.of(context).textTheme.headline2?.copyWith(color: Colors.white, decoration: TextDecoration.lineThrough, fontSize: 10,),
+                      overflow: TextOverflow.ellipsis,
+                    ),
+                  ],
+                ),
             ],
           ),
         ),
@@ -88,3 +100,4 @@ Widget buttonElevated(String text, BuildContext context, Function func) {
     )
   );
 }
+

@@ -11,7 +11,9 @@ import 'package:hotel_manager/screen/product_section/fitness.dart';
 import 'package:hotel_manager/screen/product_section/pools.dart';
 import 'package:hotel_manager/screen/product_section/spa/spa_categories.dart';
 import 'package:hotel_manager/screen/product_section/stocks.dart';
-import 'package:hotel_manager/screen/profile.dart';
+import 'package:hotel_manager/screen/profile/components/profile.dart';
+import 'package:hotel_manager/screen/profile/components/profile_help.dart';
+import 'package:hotel_manager/screen/profile/components/profile_my_orders.dart';
 import 'package:hotel_manager/screen/restorant/basket.dart';
 import 'package:hotel_manager/screen/restorant/basket_order.dart';
 import 'package:hotel_manager/screen/restorant/products.dart';
@@ -62,6 +64,10 @@ class RouteGenerator {
         return MaterialPageRoute(builder: (_) => BasketScreen());
       case 'basket_order':
         return MaterialPageRoute(builder: (_) => BasketOrder());
+      case 'profile_help':
+        return MaterialPageRoute(builder: (_) => ProfileHelp());
+      case 'profile_my_orders':
+        return MaterialPageRoute(builder: (_) => ProfileMyOrders());
       default:
         // If there is no such named route in the switch statement, e.g. /third
         return MaterialPageRoute(

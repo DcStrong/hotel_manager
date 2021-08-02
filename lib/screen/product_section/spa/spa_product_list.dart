@@ -83,7 +83,7 @@ class _SpaProductListState extends State<SpaProductList> {
        _isLoad = true;
       });
       String key = 'products';
-      Map<String, dynamic> result = await ApiRouter.getSectionSpaCard(categoryId: widget.categoryId!, page: page, typeId: _typeActive!);
+      Map<String, dynamic> result = await ApiRouter.getSectionSpaCard(categoryId: widget.categoryId!, page: page, typeId: _typeActive ?? 0);
       if(result.containsKey(key)) {
         if(result[key].length > 0) {
           setState(() {

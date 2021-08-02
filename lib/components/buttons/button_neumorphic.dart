@@ -39,3 +39,20 @@ Widget buttonNeumorphic(String buttonText, BuildContext context, Function func )
     ),
   );
 }
+
+
+Widget flatButtonNeumorphic(IconData icon,Function func) {
+  return NeumorphicFloatingActionButton(
+    style: NeumorphicStyle(
+      color: Colors.transparent,
+      shape: NeumorphicShape.flat,
+      depth: 0,
+    ),
+    child: Container(
+      child: Icon(icon, color: ConfigColor.assentColor,),
+    ),
+    onPressed: () {
+      func();
+    }
+  );
+}

@@ -29,16 +29,28 @@ class CardWithExcursionType extends StatelessWidget implements WidgetInterface {
             ),
           ),
           if(cardModel.duration != null)
-          neumorphicIconContainer(context, 'assets/icons/clock.png', cardModel.duration!),
-          SizedBox(height: 6),
+          iconContainerForCard(context, 'assets/icons/clock.png', cardModel.duration!),
           if(cardModel.price != null)
-          neumorphicIconContainer(context, 'assets/icons/ruble.png', cardModel.price.toString()),
-          SizedBox(height: 6),
+          Row(
+            children: [
+              SizedBox(height: 6),
+              iconContainerForCard(context, 'assets/icons/ruble.png', cardModel.price.toString()),
+            ],
+          ),
           if(cardModel.guide != null)
-          neumorphicIconContainer(context, 'assets/icons/personal.png', cardModel.guide!),
-          SizedBox(height: 6),
+          Row(
+            children: [
+              SizedBox(height: 6),
+              iconContainerForCard(context, 'assets/icons/personal.png', cardModel.guide!),
+            ],
+          ),
           if(cardModel.phone != null)
-          neumorphicIconContainer(context, 'assets/icons/telephone.png', cardModel.phone!),
+          Row(
+            children: [
+              SizedBox(height: 6),
+              iconContainerForCard(context, 'assets/icons/telephone.png', cardModel.phone!),
+            ],
+          ),
           SizedBox(height: 15,),
           HtmlWidget(cardModel.body ?? ''),
       ],),

@@ -8,12 +8,13 @@ class AnimationModel {
   int? typeId;
   int? active;
   int? forAdults;
+  int? dayOfWeekId;
   List<AnimationTimes>? animationTimes = [];
   String? startTime = '';
   String? endTime = '';
 
 
-  AnimationModel({this.id, this.title, this.active, this.description, this.forAdults, this.place, this.typeId, this.animationTimes, this.startTime, this.endTime});
+  AnimationModel({this.id, this.title, this.active, this.description, this.forAdults, this.place, this.typeId, this.animationTimes, this.startTime, this.endTime, this.dayOfWeekId});
 
   factory AnimationModel.fromJSON(Map<String, dynamic> jsonMap) => AnimationModel(
     id: jsonMap['id'] ?? '',

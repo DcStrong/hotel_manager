@@ -12,7 +12,8 @@ import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class AuthScreen extends StatefulWidget {
-  AuthScreen({Key ?key}) : super(key: key);
+  final bool pathRoute;
+  AuthScreen({Key? key, this.pathRoute = false}) : super(key: key);
 
   @override
   _AuthScreenState createState() => _AuthScreenState();
@@ -34,6 +35,7 @@ class _AuthScreenState extends State<AuthScreen> {
       key: _formKey,
       child: Column(children: [
         TextFormField(
+          style: TextStyle(fontSize: 14),
           validator: (value) {
             if (value?.isEmpty ?? false) return 'Поле не может быть пустым';
             return null;
@@ -48,11 +50,12 @@ class _AuthScreenState extends State<AuthScreen> {
               borderSide:  BorderSide(
                 color: Colors.grey, width: 1.0),
             ),
-            labelStyle: TextStyle(color: Colors.grey,),
+            labelStyle: TextStyle(color: Colors.grey, fontSize: 12),
             labelText: 'Телефон или e-mail',
           ),
         ),
         TextFormField(
+          style: TextStyle(fontSize: 14),
           validator: (value) {
             if (value?.isEmpty ?? false) return 'Поле не может быть пустым';
             return null;
@@ -68,7 +71,7 @@ class _AuthScreenState extends State<AuthScreen> {
               borderSide:  BorderSide(
                 color: Colors.grey, width: 1.0),
             ),
-            labelStyle: TextStyle(color: Colors.grey,),
+            labelStyle: TextStyle(color: Colors.grey, fontSize: 12),
             labelText: 'Пароль',
           ),
         ),
@@ -81,29 +84,30 @@ class _AuthScreenState extends State<AuthScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
+      appBar: widget.pathRoute == false ? AppBar(
         leadingWidth: 0,
         leading: Container(),
         title: Text('Авторизация', style: Theme.of(context).textTheme.headline1,),
         shadowColor: Colors.transparent,
+      ) : AppBar(
+        title: Text('Авторизация', style: Theme.of(context).textTheme.headline1,),
       ),
       body:
       Container(
         padding: EdgeInsets.all(20),
         child: ListView(
-          shrinkWrap: true,
           children: [
             authForm(),
-            SizedBox(
-              height: 150,
-            ),
             buttonElevatedCenter('Войти', context, () async {
               if(_formKey.currentState!.validate()) {
                 try {
                   var result = await ApiRouter.auth(_authController.text, _authPasswordController.text);
 
                   context.read<User>().setUser(result);
-
+                  if(widget.pathRoute) {
+                    Navigator.pop(context);
+                    return;
+                  } 
                   await Navigator.pushNamedAndRemoveUntil(context, 'profile', (route) => false);
 
                 } on MessageException catch(e) {

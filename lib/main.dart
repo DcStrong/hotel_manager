@@ -66,19 +66,19 @@ class MyAppState extends State<MyApp> {
             headline1: TextStyle(
               fontWeight: FontWeight.w600,
               color: ConfigColor.assentColor,
-              fontSize: 20,
+              fontSize: 16,
               fontFamily: 'MontseratMedium'
             ),
             headline2: TextStyle(
               fontFamily: 'MontseratMedium',
               color: ConfigColor.assentColor,
-              fontSize: 18,
+              fontSize: 14,
             ),
             headline3: TextStyle(
               fontFamily: 'MontseratMedium',
               fontWeight: FontWeight.w600,
               color: ConfigColor.additionalColor,
-              fontSize: 18,
+              fontSize: 14,
             ),
             bodyText1: TextStyle(
               fontFamily: 'MontseratRegular',
@@ -92,7 +92,7 @@ class MyAppState extends State<MyApp> {
               height: 1.5,
               letterSpacing: 0.5,
               fontWeight: FontWeight.w400,
-              fontSize: 14,
+              fontSize: 12,
               color: ConfigColor.additionalColor
             ),
           ),

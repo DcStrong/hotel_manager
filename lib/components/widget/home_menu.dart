@@ -15,7 +15,7 @@ class HomeMenu extends StatelessWidget {
     Container()
     :
     Container(
-      margin: EdgeInsets.only(left: 15, right: 15),
+      margin: EdgeInsets.only(left: 15, right: 15, top: 10),
       height: 100,
       child: ListView.separated(
         separatorBuilder: (ctx, i) {

@@ -27,6 +27,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
       key: _formKey,
       child: Column(children: [
         TextFormField(
+          style: TextStyle(fontSize: 14),
           validator: (value) {
             if (value?.isEmpty ?? false) return 'Пожалуйста, введите фамилию';
             return null;
@@ -41,11 +42,12 @@ class _RegisterScreenState extends State<RegisterScreen> {
               borderSide:  BorderSide(
                 color: Colors.grey, width: 1.0),
             ),
-            labelStyle: TextStyle(color: Colors.grey,),
+            labelStyle: TextStyle(color: Colors.grey, fontSize: 12),
             labelText: 'Фамилия',
           ),
         ),
         TextFormField(
+          style: TextStyle(fontSize: 14),
           validator: (value) {
             if (value!.isEmpty) return 'Пожалуйста, введите имя';
             return null;
@@ -60,11 +62,12 @@ class _RegisterScreenState extends State<RegisterScreen> {
               borderSide:  BorderSide(
                 color: Colors.grey, width: 1.0),
             ),
-            labelStyle: TextStyle(color: Colors.grey,),
+            labelStyle: TextStyle(color: Colors.grey, fontSize: 12),
             labelText: 'Имя',
           ),
         ),
         TextFormField(
+          style: TextStyle(fontSize: 14),
           validator: (value) {
             if (value!.isEmpty) return 'Пожалуйста введите E-Mail';
             String p = "[a-zA-Z0-9+.\_\%-+]{1,256}@[a-zA-Z0-9][a-zA-Z0-9-]{0,64}(.[a-zA-Z0-9][a-zA-Z0-9-]{0,25})+";
@@ -82,11 +85,12 @@ class _RegisterScreenState extends State<RegisterScreen> {
               borderSide:  BorderSide(
                 color: Colors.grey, width: 1.0),
             ),
-            labelStyle: TextStyle(color: Colors.grey,),
+            labelStyle: TextStyle(color: Colors.grey, fontSize: 12),
             labelText: 'E-Mail',
           ),
         ),
         TextFormField(
+          style: TextStyle(fontSize: 14),
           validator: (value) {
             if (value?.isEmpty ?? false) return 'Пожалуйста, введите телефон';
             return null;
@@ -101,11 +105,12 @@ class _RegisterScreenState extends State<RegisterScreen> {
               borderSide:  BorderSide(
                 color: Colors.grey, width: 1.0),
             ),
-            labelStyle: TextStyle(color: Colors.grey,),
+            labelStyle: TextStyle(color: Colors.grey, fontSize: 12),
             labelText: 'Телефон',
           ),
         ),
         TextFormField(
+          style: TextStyle(fontSize: 14),
           validator: (value) {
             if (value?.isEmpty ?? false) return 'Пожалуйста, введите пароль';
             return null;
@@ -121,11 +126,12 @@ class _RegisterScreenState extends State<RegisterScreen> {
               borderSide:  BorderSide(
                 color: Colors.grey, width: 1.0),
             ),
-            labelStyle: TextStyle(color: Colors.grey,),
+            labelStyle: TextStyle(color: Colors.grey, fontSize: 12),
             labelText: 'Пароль',
           ),
         ),
         TextFormField(
+          style: TextStyle(fontSize: 14),
           validator: (value) {
             if(_passwordController.text != _passwordConfirmController.text) return 'Пароли не совпадают';
             if (value?.isEmpty ?? false) return 'Пожалуйста, повторите пароль';
@@ -142,7 +148,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
               borderSide:  BorderSide(
                 color: Colors.grey, width: 1.0),
             ),
-            labelStyle: TextStyle(color: Colors.grey,),
+            labelStyle: TextStyle(color: Colors.grey, fontSize: 12),
             labelText: 'Повторите пароль',
           ),
         ),

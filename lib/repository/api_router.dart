@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:dio/dio.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -13,6 +15,7 @@ import 'package:hotel_manager/model/food.dart';
 import 'package:hotel_manager/model/restourant.dart';
 import 'package:hotel_manager/model/spa_form.dart';
 import 'package:hotel_manager/model/user.dart';
+import 'package:hotel_manager/model/user_food.dart';
 import 'package:hotel_manager/provider/home_menu.dart';
 import 'package:hotel_manager/repository/dio.dart';
 import 'package:provider/provider.dart';
@@ -88,7 +91,7 @@ class ApiRouter {
   }
 
   static Future<List<CardModel>> getSectionFitnesForHome() async {
-    String path = 'fitnes';
+    String path = 'fitness';
     List<CardModel> data = [];
     try {
       var response = await dio.get(path, queryParameters: {'main_page': 1});
@@ -114,7 +117,7 @@ class ApiRouter {
       responseMap.forEach((element) {
         data.add(CardModel.fromJSON(element));
       });
-      
+
       return data;
     } catch(e) {
       return [];
@@ -131,6 +134,13 @@ class ApiRouter {
       data.add(CardModel.fromJSON(element));
     });
     return data;
+  }
+
+  static Future<UserFoodDetail> getDetailMyOrder(int id) async {
+    String path = 'client/user_order/${id}';
+    var response = await dio.get(path);
+    Map<String, dynamic> responseMap = response.data['data'];
+    return UserFoodDetail.fromJSON(responseMap);
   }
 
    static Future<Map<String, dynamic>> getSectionSpaCard({int ?categoryId, int page = 1, int ?typeId}) async {
@@ -198,9 +208,9 @@ class ApiRouter {
     return data;
   }
 
-  static Future<List<AnimationModel>> getAllAnimations() async {
+  static Future<List<AnimationModel>> getAllAnimations(int forAdults) async {
     List<AnimationModel> data = [];
-    var response = await dio.get('animations', queryParameters: {'for_adults': 1});
+    var response = await dio.get('animations', queryParameters: {'for_adults': forAdults});
     print(response);
     List responseMap = response.data['data'];
     if(responseMap.length == 0) {
@@ -218,6 +228,20 @@ class ApiRouter {
     List responseMap = response.data['phones'];
     responseMap.forEach((element) {
       data.add(FeedbackService.fromJSON(element));
+    });
+    return data;
+  }
+
+  // static Future<List<FeedbackService>> 
+  static Future<List<UserFood>> getUserOrdersList(String token) async {
+    List<UserFood> data = [];
+    dio.options.headers['Authorization'] = "Bearer " + token;
+    var response = await dio.get('client/user_order_list');
+    List responseMap = response.data['data']['data'];
+    if(responseMap.length == 0)
+      return data;
+    responseMap.forEach((element) {
+      data.add(UserFood.fromJSON(element));
     });
     return data;
   }
@@ -391,4 +415,52 @@ class ApiRouter {
     return data;
   }
 
+  static Future<List<Food>> getOrderHistoryDetail(int id, String token) async {
+    List<Food> data = [];
+    dio.options.headers['Authorization'] = "Bearer " + token;
+    var response = await dio.get('client/user_order/${id}');
+    List responseMap = response.data['data']['foods'];
+    responseMap.forEach((element) {
+      data.add(Food.fromJSON(element));
+    });
+
+    return data;
+  }
+
+  static Future<bool> sendOrder(
+    String token,
+    int roomNumber,
+    List productList,
+    int fullPrice,
+    String corps,
+    int orderTypeId,
+    String comment,
+    int pepleCount,
+    String time,
+  ) async {
+    Map<String, dynamic> params = {
+      'order_type_id': orderTypeId,
+      'room_number': roomNumber,
+      'basket': productList,
+      'full_price': fullPrice,
+      'people_counts': pepleCount,
+      'corps': corps,
+      'comment': comment,
+      'delivery_at': time,
+    };
+    List<BasketProducts> data = [];
+    dio.options.headers['Content-Type'] = 'application/json';
+    dio.options.headers['Accept'] = 'application/json';
+    dio.options.headers['Authorization'] = "Bearer " + token;
+     try {
+      var response = await dio.post('client/create_order', data: jsonEncode(params),);
+      if (response.statusCode == 200) {
+        return true;
+      }
+      return false;
+    } on DioError catch (e) {
+      print(e);
+      return false;
+    }
+  }
 }

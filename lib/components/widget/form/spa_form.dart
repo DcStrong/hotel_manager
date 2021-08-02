@@ -27,10 +27,8 @@ class _SpaFormState extends State<SpaForm> {
   UserModel? _user;
 
   final DateLocale location = EnglishDateLocale();
-
+  final _formKey = GlobalKey<FormState>();
   String? dateTime;
-
-  DateTime selectedDate = DateTime.now();
 
   TextEditingController _dateController = TextEditingController();
   TextEditingController _timeController = TextEditingController();
@@ -38,45 +36,6 @@ class _SpaFormState extends State<SpaForm> {
   TextEditingController _firstNameController = TextEditingController();
   TextEditingController _phoneController = TextEditingController();
   TextEditingController _commentsController = TextEditingController();
-
-
-  Future<Null> _selectDate(BuildContext context) async {
-    final DateTime? picked = await showDatePicker(
-        helpText: 'Выберите дату',
-        locale: Locale('ru', 'RU'),
-        context: context,
-        initialDate: selectedDate,
-        initialDatePickerMode: DatePickerMode.day,
-        firstDate: DateTime(2015),
-        lastDate: DateTime(2101));
-    if (picked != null)
-      setState(() {
-        selectedDate = picked;
-        _dateController.text = DateFormat.yMd().format(selectedDate);
-      });
-  }
-
-  Future<Null> _selectTime(BuildContext context) async {
-    final TimeOfDay? picked = await showTimePicker(
-      context: context,
-      initialTime: TimeOfDay.now(),
-      confirmText: 'Установить',
-      cancelText: 'Закрыть',
-      helpText: 'Выберите время',
-      builder: (BuildContext context, Widget? child) {
-        return MediaQuery(
-          data: MediaQuery.of(context).copyWith(alwaysUse24HourFormat: true),
-          child: child!,
-        );
-      },
-    );
-
-    if (picked != null) {
-      setState(() {
-        _timeController.text = '${picked.hour}:${picked.minute}';
-      });
-    }
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -89,6 +48,7 @@ class _SpaFormState extends State<SpaForm> {
         child: Container(
           padding: EdgeInsets.only(top: 20, left: 15, right: 15),
           child: Form(
+            key: _formKey,
             child: Column(
               mainAxisSize: MainAxisSize.max,
               children: [
@@ -96,9 +56,14 @@ class _SpaFormState extends State<SpaForm> {
                 children: [
                   Expanded(
                     child: TextFormField(
+                      validator: (value) {
+                        if (value?.isEmpty ?? false) return 'Не может быть пустым';
+                        return null;
+                      },
                       controller: _dateController,
                       onTap: () async {
-                        _selectDate(context);
+                        String date = await helper.selectDate(context);
+                        _dateController.text = date;
                         FocusScope.of(context).requestFocus(new FocusNode());
                       },
                       decoration: InputDecoration(
@@ -110,9 +75,23 @@ class _SpaFormState extends State<SpaForm> {
                   SizedBox(width: 25,),
                   Expanded(
                     child: TextFormField(
+                      validator: (value) {
+                        if (value?.isEmpty ?? false) return 'Не может быть пустым';
+                        String hour = value?.split(':')[0] as String;
+                        if(int.parse(hour) >= 21) {
+                          helper.showMessageSnackBar(
+                            context, 'Извините ресторан в это время не работает, установите другое время или дату'
+                          );
+                          return 'Извините время или дату';
+                        }
+                        return null;
+                      },
                       controller: _timeController,
                       onTap: () async {
-                        _selectTime(context);
+                        String time = await helper.selectTime(context);
+                        setState(() {
+                          _timeController.text = time;
+                        });
                         FocusScope.of(context).requestFocus(new FocusNode());
                       },
                       decoration: InputDecoration(
@@ -124,6 +103,10 @@ class _SpaFormState extends State<SpaForm> {
                 ],
               ),
               TextFormField(
+                validator: (value) {
+                  if (value?.isEmpty ?? false) return 'Поле не может быть пустым';
+                  return null;
+                },
                 controller: _lastNameController,
                 decoration: InputDecoration(
                   labelStyle: TextStyle(color: ConfigColor.additionalColor),
@@ -131,6 +114,10 @@ class _SpaFormState extends State<SpaForm> {
                 ),
               ),
               TextFormField(
+                validator: (value) {
+                  if (value?.isEmpty ?? false) return 'Поле не может быть пустым';
+                  return null;
+                },
                 controller: _firstNameController,
                 decoration: InputDecoration(
                   labelStyle: TextStyle(color: ConfigColor.additionalColor),
@@ -138,6 +125,10 @@ class _SpaFormState extends State<SpaForm> {
                 ),
               ),
               TextFormField(
+                validator: (value) {
+                  if (value?.isEmpty ?? false) return 'Поле не может быть пустым';
+                  return null;
+                },
                 keyboardType: TextInputType.phone,
                 inputFormatters: [maskFormatter],
                 controller: _phoneController,
@@ -167,20 +158,21 @@ class _SpaFormState extends State<SpaForm> {
               ),
               SizedBox(height: 15,),
               buttonElevatedCenter('Записаться', context, () async {
-                FocusScope.of(context).unfocus();
-                String dateString = _dateController.text + ' ' + _timeController.text;
-                DateTime tempDate = new DateFormat("MM/dd/yyyy HH:mm").parse(dateString);
-                SpaFormModel form = new SpaFormModel(
-                  phone: maskFormatter.getUnmaskedText(),
-                  categoryId: widget.categoryId ?? 0,
-                  date: tempDate,
-                  firstName: _firstNameController.text,
-                  lastName: _lastNameController.text,
-                  procedureId: widget.procedureId ?? 0,
-                  ownerId: _user?.id
-                );
-                helper.showProgress(context, ApiRouter.createRequestForSpa(form));
-                // await ApiRouter.createRequestForSpa(form);
+                if(_formKey.currentState!.validate()) {
+                  FocusScope.of(context).unfocus();
+                  String dateString = _dateController.text + ' ' + _timeController.text;
+                  DateTime tempDate = new DateFormat("MM/dd/yyyy HH:mm").parse(dateString);
+                  SpaFormModel form = new SpaFormModel(
+                    phone: maskFormatter.getUnmaskedText(),
+                    categoryId: widget.categoryId ?? 0,
+                    date: tempDate,
+                    firstName: _firstNameController.text,
+                    lastName: _lastNameController.text,
+                    procedureId: widget.procedureId ?? 0,
+                    ownerId: _user?.id
+                  );
+                  helper.showProgress(context, ApiRouter.createRequestForSpa(form));
+                }
               }),
               SizedBox(height: 15,),
             ],),

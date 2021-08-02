@@ -14,6 +14,10 @@ class CardWithTextMiddleware extends Interceptor with CardMiddleware {
       response.data = this.createWidgetFromData(response.data['data']);
     }
 
+    if (responseDataType == ' ') {
+      response.data = this.createWidgetFromData(response.data['data']);
+    }
+
     return super.onResponse(response, handler);
   }
 

@@ -46,53 +46,54 @@ class _ActivitiesSectionState extends State<ActivitiesSection> {
   @override
 
   Widget build(BuildContext context) {
-      return
-      _isLoad
-      ?
-        HorizontalShimmer()
-      :
-        _listItem.length == 0
-      ?
-        Container() 
-      :
-      Column(
-        children: [
-          SizedBox(height: 15,),
-          GestureDetector(
-            onTap: () {
-              Navigator.push(context, MaterialPageRoute(builder: (context) {
-                return ScreenProduct(title: 'Мероприятия',path: _path);
-              }));
-            },
-            child: Container(
-              margin: EdgeInsets.only(right: 15, left: 15, bottom: 20),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Text('Мероприятия', style: Theme.of(context).textTheme.headline1,),
-                  Image.asset('assets/icons/arrow.png', width: 8,)
-                ],
-              ),
+    double height = MediaQuery.of(context).size.width * 0.65;
+    return
+    _isLoad
+    ?
+      HorizontalShimmer()
+    :
+      _listItem.length == 0
+    ?
+      Container() 
+    :
+    Column(
+      children: [
+        SizedBox(height: 15,),
+        GestureDetector(
+          onTap: () {
+            Navigator.push(context, MaterialPageRoute(builder: (context) {
+              return ScreenProduct(title: 'Мероприятия',path: _path);
+            }));
+          },
+          child: Container(
+            margin: EdgeInsets.only(right: 15, left: 15, bottom: 20),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Text('Мероприятия', style: Theme.of(context).textTheme.headline1,),
+                Image.asset('assets/icons/arrow.png', width: 8,)
+              ],
             ),
           ),
-          Container(
-            height: 235,
-            child: ListView.builder(
-              scrollDirection: Axis.horizontal,
-              itemCount: _listItem.length,
-              itemBuilder: (ctx, i) {
-                return GestureDetector(
-                  onTap: () {
-                    Navigator.push(context, MaterialPageRoute(builder: (context) {
-                      return DetailCard(id: _listItem[i].id, path: _path,);
-                    }));
-                  },
-                  child: HorizontalCard(card: _listItem[i])
-                );
-              }
-            ),
-          )
-        ],
-      );
-    }
+        ),
+        Container(
+          height: height,
+          child: ListView.builder(
+            scrollDirection: Axis.horizontal,
+            itemCount: _listItem.length,
+            itemBuilder: (ctx, i) {
+              return GestureDetector(
+                onTap: () {
+                  Navigator.push(context, MaterialPageRoute(builder: (context) {
+                    return DetailCard(id: _listItem[i].id, path: _path,);
+                  }));
+                },
+                child: HorizontalCard(card: _listItem[i])
+              );
+            }
+          ),
+        )
+      ],
+    );
+  }
 }

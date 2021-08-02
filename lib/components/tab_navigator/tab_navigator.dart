@@ -3,17 +3,27 @@
 // ignore: must_be_immutable
 import 'package:flutter/material.dart';
 import 'package:hotel_manager/components/tab_navigator/tab_item.dart';
+import 'package:hotel_manager/provider/basket_product.dart';
+import 'package:provider/provider.dart';
 
 import 'bottom_navigation.dart';
 
 // ignore: must_be_immutable
 class TabNavigator extends StatefulWidget with ChangeNotifier{
   TabNavigator({Key ?key}) : super(key: key);
-  static bool onGoingCall = false;
+  static bool onGoingCall = true;
   static ValueNotifier<int> currentTab = ValueNotifier<int>(1);
   static changeValue(int i) {
     currentTab.value = i;
     currentTab.notifyListeners();
+  }
+
+  static selectTabFoMain(int index, BuildContext context) {
+    if (index != TabNavigator.currentTab.value) {
+      TabNavigator.changeValue(index);
+    } else {
+      Navigator.pushNamed(context, 'tabNavigator');
+    }
   }
 
   @override
@@ -26,6 +36,10 @@ class _TabNavigatorState extends State<TabNavigator> {
     super.initState();
     tabs.asMap().forEach((index, details) {
       details.setIndex(index);
+    });
+    WidgetsBinding.instance!.addPostFrameCallback((_) {
+      context.read<Basket>().getProductInBasketCache();
+      // Provider.of<Basket>(context, listen: false).getProductInBasketCache();
     });
   }
 
@@ -55,6 +69,8 @@ class _TabNavigatorState extends State<TabNavigator> {
   void selectTab(int index, {Map ?arguments}) {
     if (index != TabNavigator.currentTab.value) {
       TabNavigator.changeValue(index);
+    } else {
+      Navigator.pushNamed(context, 'tabNavigator');
     }
   }
 

@@ -54,7 +54,7 @@ class _NeomorfIconButtonState extends State<NeomorfIconButton> {
             ),
             child: Container(
               margin: EdgeInsets.all(12),
-              child: Image.asset(widget.icons),
+              child: Image.asset(widget.icons, color: ConfigColor.assentColor,),
             )
           ),
         ),

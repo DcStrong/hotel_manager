@@ -33,20 +33,17 @@ class CardWithSpaType extends StatelessWidget implements WidgetInterface {
           ),
           // HtmlWidget(cardWithActivityType.body!),
           if(cardModel.time != null)
-          neumorphicIconContainer(context, 'assets/icons/clock.png', cardModel.time!),
-          SizedBox(height: 6),
+          iconContainerForCard(context, 'assets/icons/clock.png', cardModel.time!),
           if(cardModel.price != null)
-          neumorphicIconContainer(context, 'assets/icons/ruble.png', cardModel.price.toString()),
-          SizedBox(height: 6),
+          iconContainerForCard(context, 'assets/icons/ruble.png', cardModel.price.toString()),
           if(cardModel.master != null)
-          neumorphicIconContainer(context, 'assets/icons/personal.png', cardModel.master!),
-          SizedBox(height: 6),
+          iconContainerForCard(context, 'assets/icons/personal.png', cardModel.master!),
           if(cardModel.phone != null)
           InkWell(
             onTap: () {
               helper.launchUrl("tel:${cardModel.phone}");
             },
-            child: neumorphicIconContainer(context, 'assets/icons/telephone.png', cardModel.phone!)
+            child: iconContainerForCard(context, 'assets/icons/telephone.png', cardModel.phone!)
           ),
           SizedBox(height: 15,),
           buttonElevatedCenter('Записаться', context, () {

@@ -6,7 +6,7 @@ Widget buttonText(String text, BuildContext context, {Color ?color, Function ?fu
   final ButtonStyle textButtonStyle = TextButton.styleFrom(
     primary: color ?? ConfigColor.assentColor,
     minimumSize: Size(88, 36),
-    padding: EdgeInsets.symmetric(horizontal: isPadding ? 16 : 0),
+    padding: EdgeInsets.symmetric(horizontal: isPadding ? 12 : 0),
   );
 
   return Container(
@@ -15,7 +15,7 @@ Widget buttonText(String text, BuildContext context, {Color ?color, Function ?fu
       onPressed: () {
         func!();
       },
-      child: Text(text, style: TextStyle(fontFamily: 'MontseratMedium', fontSize: 16, fontWeight: FontWeight.w600),),
+      child: Text(text, style: TextStyle(fontFamily: 'MontseratMedium', fontSize: 14, fontWeight: FontWeight.w600),),
     ),
   );
 }

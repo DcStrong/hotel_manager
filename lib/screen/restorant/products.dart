@@ -1,18 +1,16 @@
-import 'dart:convert';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_neumorphic/flutter_neumorphic.dart';
 import 'package:hotel_manager/components/buttons/button_elevated.dart';
+import 'package:hotel_manager/components/buttons/button_neumorphic.dart';
+import 'package:hotel_manager/components/buttons/leading_button_back.dart';
 import 'package:hotel_manager/components/widget/basketNavBar.dart';
 import 'package:hotel_manager/helper/config_color.dart';
-import 'package:hotel_manager/model/basket_produts.dart';
 import 'package:hotel_manager/model/food.dart';
-import 'package:hotel_manager/model/user.dart';
 import 'package:hotel_manager/provider/basket_product.dart';
 import 'package:hotel_manager/provider/user.dart';
 import 'package:hotel_manager/repository/api_router.dart';
+import 'package:hotel_manager/screen/auth/auth_screen.dart';
 import 'package:provider/provider.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 class ProductsScreen extends StatefulWidget {
   final int id;
@@ -28,10 +26,9 @@ class _ProductsScreenState extends State<ProductsScreen> {
   bool multiple = false;
   double? _width;
   double? _heightImage = 150;
-  UserModel? _user;
 
   @override
-  void initState() { 
+  void initState() {
     super.initState();
     getResoutantFoods();
     WidgetsBinding.instance!.addPostFrameCallback((_) {
@@ -40,7 +37,6 @@ class _ProductsScreenState extends State<ProductsScreen> {
         if(_widthCard == null) {
           _widthCard = _width! / 2;
         }
-        _user = Provider.of<User>(context, listen: false).userProfile;
       });
     });
   }
@@ -52,13 +48,15 @@ class _ProductsScreenState extends State<ProductsScreen> {
         content: const Text('Для того что бы продолжить, вам необходимо авторизироваться'),
         actions: <Widget>[
           TextButton(
-            onPressed: () => Navigator.pop(context, 'Cancel'),
+            onPressed: () => Navigator.pop(_context, 'Cancel'),
             child: Text('Закрыть'),
           ),
           TextButton(
             onPressed: () {
               Navigator.pop(_context);
-              Navigator.pushNamed(context, 'profile', );
+              Navigator.push(context, MaterialPageRoute(builder: (context) {
+                  return AuthScreen(pathRoute: true);
+                }));
             },
             child: Text('ОК'),
           ),
@@ -85,12 +83,7 @@ class _ProductsScreenState extends State<ProductsScreen> {
             child: Container(
               width: AppBar().preferredSize.height - 8,
               height: AppBar().preferredSize.height - 8,
-              child:  IconButton(
-                onPressed: () {
-                  Navigator.pop(context);
-                },
-                icon: Icon(Icons.arrow_back)
-              ),
+              child: iconButtonBack(context),
             ),
           ),
           Expanded(
@@ -106,7 +99,6 @@ class _ProductsScreenState extends State<ProductsScreen> {
             child: Container(
               width: AppBar().preferredSize.height - 8,
               height: AppBar().preferredSize.height - 8,
-              color: Colors.white,
               child: Material(
                 color: Colors.transparent,
                 child: InkWell(
@@ -175,52 +167,48 @@ class _ProductsScreenState extends State<ProductsScreen> {
               SizedBox(height: 10,),
               Text('${product.weight.toString()} г', style: Theme.of(context).textTheme.bodyText1),
               SizedBox(height: 10,),
-              Consumer<Basket>(
-                builder: (BuildContext context, store, Widget? child) {
-                  List<Food> basket = store.basketInFood;
-                  var element = basket.where((e) => e.id == product.id);
-                  if(element.isNotEmpty) {
-                    return Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceAround,
-                      children: [
-                        InkWell(
-                          onTap: () async {
-                            store.decreaseCountProductInBasket(product);
-                          },
-                          child: Container(
-                            width: 48,
-                            height: 48,
-                            child: Icon(Icons.remove, color: ConfigColor.assentColor,),
-                          ),
-                        ),
-                        Text(element.last.quantity.toString(), style: Theme.of(context).textTheme.headline2?.copyWith(color: ConfigColor.assentColor, fontWeight: FontWeight.w600)),
-                        InkWell(
-                          onTap: () async {
-                            // var result = await ApiRouter.addBasketFood(product.id, _user!.token!);
-                            store.increaseCountProductInBasket(product);
-                          },
-                          child: Container(
-                            width: 48,
-                            height: 48,
-                            child: Icon(Icons.add, color: ConfigColor.assentColor,),
-                          ),
-                        ),
-                    ],);
-                  } else {
-                    return 
-                      buttonElevatedFullForPrice(
-                        product.price.toString(),
-                        context,
-                        () async {
-                          if (_user?.token != null) {
-                            store.addBasketProduct(product);
-                          } else {
-                            allertDialog(context);
-                          }
-                        },
-                        priceSale: product.discountPrice.toString()
-                      );
-                  }
+              Consumer<User>(
+                builder: (context, user, _) {
+                  return Consumer<Basket>(
+                    builder: (BuildContext context, store, Widget? child) {
+                      List<Food> basket = store.basketInFood;
+                      var element = basket.where((e) => e.id == product.id);
+                      if(element.isNotEmpty) {
+                        return Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceAround,
+                          children: [
+                            flatButtonNeumorphic(Icons.remove, () {store.decreaseCountProductInBasket(product);}),
+                            Container(
+                              child: Center(
+                                child: Text(
+                                  element.last.quantity.toString(), 
+                                  style: Theme.of(context).textTheme
+                                    .headline2?.copyWith(
+                                      color: ConfigColor.assentColor, 
+                                      fontWeight: FontWeight.w600
+                                  )
+                                ),
+                              )
+                            ),
+                            flatButtonNeumorphic(Icons.add, () {store.increaseCountProductInBasket(product);}),
+                        ],);
+                      } else {
+                        return 
+                          buttonElevatedFullForPrice(
+                            product.price!,
+                            context,
+                            () async {
+                              if (user.userProfile.token != null) {
+                                store.addBasketProduct(product);
+                              } else {
+                                allertDialog(context);
+                              }
+                            },
+                            priceSale: product.discountPrice
+                          );
+                      }
+                    }
+                  );
                 }
               )
           ],),

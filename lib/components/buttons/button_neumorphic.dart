@@ -49,7 +49,7 @@ Widget flatButtonNeumorphic(IconData icon,Function func) {
       depth: 0,
     ),
     child: Container(
-      child: Icon(icon, color: ConfigColor.assentColor,),
+      child: Icon(icon, color: ConfigColor.assentColor, size: 16,),
     ),
     onPressed: () {
       func();

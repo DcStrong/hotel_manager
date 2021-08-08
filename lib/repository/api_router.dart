@@ -10,6 +10,7 @@ import 'package:hotel_manager/model/animation_types.dart';
 import 'package:hotel_manager/model/animation_week_day.dart';
 import 'package:hotel_manager/model/basket_produts.dart';
 import 'package:hotel_manager/model/card_model.dart';
+import 'package:hotel_manager/model/detail_food.dart';
 import 'package:hotel_manager/model/feedback_service.dart';
 import 'package:hotel_manager/model/food.dart';
 import 'package:hotel_manager/model/restourant.dart';
@@ -56,11 +57,11 @@ class ApiRouter {
     }
   }
 
-  static Future<List> getSectionActivitiesForHome() async {
+  static Future<List> getSectionActivitiesForHome({int? page = 1}) async {
     String path = 'activities';
     List data = [];
     try {
-      var response = await dio.get(path, queryParameters: {'main_page': 1});
+      var response = await dio.get(path, queryParameters: {'main_page': 1, 'page': page});
       List responseMap = response.data['data'];
       print(responseMap);
       responseMap.forEach((element) {
@@ -159,9 +160,9 @@ class ApiRouter {
   }
 
 
-  static Future<List> getSectionCard(String path, {int ?categoryId}) async {
+  static Future<List> getSectionCard(String path, {int ?categoryId, int? page = 1}) async {
     List data = [];
-    var response = await dio.get(path, queryParameters: {'category_id' : categoryId});
+    var response = await dio.get(path, queryParameters: {'category_id' : categoryId, 'page': page});
     List responseMap = response.data['data']['data'];
     responseMap.forEach((element) {
       data.add(CardModel.fromJSON(element));
@@ -296,6 +297,14 @@ class ApiRouter {
     }
   }
 
+  static Future getProductCategories(int id) async {
+    dio.options.headers['Content-Type'] = 'application/json';
+    dio.options.headers['Accept'] = 'application/json';
+
+    var response = await dio.get('client/food-categories');
+    print(response);
+  }
+
   static Future<bool> createRequestForSpa(SpaFormModel formModel) async {
    Map<String, dynamic> params = {
      'owner_id': formModel.ownerId,
@@ -352,12 +361,13 @@ class ApiRouter {
     return data;
   }
 
-  static Future<List<Food>> getRestourantFoods(int id, {int? categoryId}) async {
+  static Future<List<Food>> getRestourantFoods(int id, {int? categoryId, int? page = 1}) async {
     List<Food> data = [];
     Map<String, dynamic> params = {
      'restaurant_id': id,
      'food_category_id': categoryId,
-     'page': 1,
+     'page': page,
+     'count': 14,
    };
 
     var response = await dio.get('client/foods', queryParameters: params);
@@ -384,6 +394,15 @@ class ApiRouter {
     });
 
     return data;
+  }
+
+  static Future<DetailFood> getDetailFood(int id) async {
+    String idFood = id.toString();
+    var response = await dio.get('client/foods/$idFood');
+
+    Map<String, dynamic> responseMap = response.data['data'];
+
+    return DetailFood.fromJSON(responseMap);
   }
 
   static Future<List<BasketProducts>> removeBasketFood(int id, String token) async {

@@ -1,6 +1,6 @@
 class Food {
   int id;
-  String preview;
+  String? preview;
   String title;
   int? price;
   int? discountPrice;
@@ -26,7 +26,7 @@ class Food {
   factory Food.fromJSON(Map<String, dynamic> jsonMap, {int? quant}) => Food(
     id: jsonMap['id'],
     title: jsonMap['title'],
-    preview: jsonMap['preview'] ?? '',
+    preview: jsonMap['preview'] ?? null,
     discountPrice: jsonMap['discount_price'],
     price: jsonMap['price'],
     restaurantId: jsonMap['restaurant_id'],

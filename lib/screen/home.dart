@@ -2,6 +2,8 @@ import 'package:flutter/rendering.dart';
 import 'package:flutter_neumorphic/flutter_neumorphic.dart';
 import 'package:hotel_manager/components/widget/home_menu.dart';
 import 'package:hotel_manager/helper/config_color.dart';
+import 'package:hotel_manager/model/menu_item.dart';
+import 'package:hotel_manager/provider/home_menu.dart';
 import 'package:hotel_manager/screen/product_section/activities.dart';
 import 'package:hotel_manager/screen/product_section/excursions.dart';
 import 'package:hotel_manager/screen/product_section/fitness.dart';
@@ -26,15 +28,14 @@ class _MyHomePageState extends State<MyHomePage> {
           child: Column(
             mainAxisSize: MainAxisSize.max,
             children: [
-            StocksSection(),
-            HomeMenu(),
-            SpaSection(),
-            ActivitiesSection(),
-            ExcursionSection(),
-            FitnesSection(),
-            PoolsSection()
-          ],
-        ),
+              StocksSection(),
+              HomeMenu(),
+              SpaSection(),
+              ActivitiesSection(),
+              ExcursionSection(),
+              FitnesSection(),
+              PoolsSection()
+          ],),
         ),
       )
     );

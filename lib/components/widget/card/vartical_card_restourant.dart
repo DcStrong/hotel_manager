@@ -18,46 +18,41 @@ class _VerticalCardRestourantState extends State<VerticalCardRestourant> {
   @override
   Widget build(BuildContext context) {
     double width = MediaQuery.of(context).size.width;
-    return InkWell(
-      onTap: () {
-        
-      },
-      child: Container(
-        height: 200,
-        padding: EdgeInsets.all(15),
-        child: Neumorphic(
-          style: NeumorphicStyle(
-            color: ConfigColor.bgColor,
-            boxShape: NeumorphicBoxShape.roundRect(BorderRadius.circular(15)),
-            shadowLightColor: ConfigColor.shadowLightColor,
-            shadowDarkColor: ConfigColor.shadowDarkColor.withOpacity(0.6),
-          ),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Flexible(
-                flex: 3,
-                child: PhotoHero(
-                  photo: widget.restourant.preview,
-                  width: width,
-                  onTap: () {
-                    Navigator.push(context, MaterialPageRoute(builder: (context) {
-                      return DetailRestourant(restourant: widget.restourant,);
-                    }));
-                  },
+    return Container(
+      height: 200,
+      padding: EdgeInsets.all(15),
+      child: Neumorphic(
+        style: NeumorphicStyle(
+          color: ConfigColor.bgColor,
+          boxShape: NeumorphicBoxShape.roundRect(BorderRadius.circular(15)),
+          shadowLightColor: ConfigColor.shadowLightColor,
+          shadowDarkColor: ConfigColor.shadowDarkColor.withOpacity(0.6),
+        ),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Flexible(
+              flex: 3,
+              child: PhotoHero(
+                photo: widget.restourant.preview,
+                width: width,
+                onTap: () {
+                  Navigator.push(context, MaterialPageRoute(builder: (context) {
+                    return DetailRestourant(restourant: widget.restourant,);
+                  }));
+                },
+              ),
+            ),
+            Flexible(
+              child: Center(
+                child: Text(
+                  widget.restourant.title, 
+                  style: Theme.of(context).textTheme.headline1?.copyWith(fontSize: 14),
+                  overflow: TextOverflow.ellipsis,
                 ),
               ),
-              Flexible(
-                child: Center(
-                  child: Text(
-                    widget.restourant.title, 
-                    style: Theme.of(context).textTheme.headline1?.copyWith(fontSize: 14),
-                    overflow: TextOverflow.ellipsis,
-                  ),
-                ),
-              )
-          ],),
-        ),
+            )
+        ],),
       ),
     );
   }
@@ -79,19 +74,22 @@ class PhotoHero extends StatelessWidget {
           color: Colors.transparent,
           child: InkWell(
             onTap: onTap,
-            child: Image.network(
-              photo,
-              width: width,
-              fit: BoxFit.contain,
-              errorBuilder: (BuildContext context, Object exception, StackTrace? stackTrace) {
-                return Center(
-                  child: Image.asset(
-                    'assets/img/image_not_found.jpg',
-                    width: width,
-                    fit: BoxFit.cover,
-                  )
-                );
-              },
+            child: ClipRRect(
+              borderRadius: BorderRadius.circular(10),
+              child: Image.network(
+                photo,
+                width: width,
+                fit: BoxFit.fitWidth,
+                errorBuilder: (BuildContext context, Object exception, StackTrace? stackTrace) {
+                  return Center(
+                    child: Image.asset(
+                      'assets/img/image_not_found.jpg',
+                      width: width,
+                      fit: BoxFit.fitWidth,
+                    )
+                  );
+                },
+              ),
             ),
           ),
         ),
@@ -143,21 +141,12 @@ class DetailRestourant extends StatelessWidget {
                   Navigator.pop(context);
                 },
               ),
+              SizedBox(height: 15,),
               Text(
                 'Время работы ${restourant.openTime} - ${restourant.closeTime}', 
-                style: Theme.of(context).textTheme.bodyText2?.copyWith(fontSize: 12),
+                style: Theme.of(context).textTheme.headline2?.copyWith(fontWeight: FontWeight.w600)
               ),
-              SizedBox(
-                height: 5,
-              ),
-              Container(
-                child: Text(
-                  restourant.description ?? ''
-                ),
-              ),
-              SizedBox(
-                height: 5,
-              ),
+              SizedBox(height: 5,),
               ListView.builder(
                 physics: NeverScrollableScrollPhysics(),
                 shrinkWrap: true,
@@ -170,15 +159,23 @@ class DetailRestourant extends StatelessWidget {
                         restourant.cuisines[i].title,
                         style: Theme.of(context).textTheme.headline2,
                       ),
-                      SizedBox(
-                        height: 15,
-                      ),
                     ],
                   );
                 }
               ),
+              SizedBox(
+                height: 5,
+              ),
+              Container(
+                child: Text(
+                  restourant.description ?? ''
+                ),
+              ),
+              SizedBox(
+                height: 5,
+              ),
               SizedBox(height: 15,),
-              Text('Среднее время доставки: ${restourant.deliveryTime}', style: Theme.of(context).textTheme.bodyText1,),
+              Text('Среднее время доставки: ${restourant.deliveryTime}'),
               SizedBox(height: 15,),
           ],),
         ),

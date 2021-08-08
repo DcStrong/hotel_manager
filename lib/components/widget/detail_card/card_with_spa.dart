@@ -14,7 +14,7 @@ class CardWithSpaType extends StatelessWidget implements WidgetInterface {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
+    return Padding(
       padding: EdgeInsets.only(left: 12, right: 12),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -43,7 +43,7 @@ class CardWithSpaType extends StatelessWidget implements WidgetInterface {
             onTap: () {
               helper.launchUrl("tel:${cardModel.phone}");
             },
-            child: iconContainerForCard(context, 'assets/icons/telephone.png', cardModel.phone!)
+            child: iconContainerForCard(context, 'assets/icons/telephone.png', helper.maskForPhone(cardModel.phone!))
           ),
           SizedBox(height: 15,),
           buttonElevatedCenter('Записаться', context, () {

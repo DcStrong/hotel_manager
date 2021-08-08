@@ -53,21 +53,26 @@ Widget buttonElevatedFullForPrice(int price, BuildContext context, Function func
           child: Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
+              priceSale == null ? 
               Text(
                 '${price} ₽', 
                 style: Theme.of(context).textTheme.headline2?.copyWith(color: Colors.white, fontWeight: FontWeight.w600, fontSize: 12)
+              )
+              :
+              Row(
+                children: [
+                  Text(
+                    '${priceSale} ₽', 
+                    style: Theme.of(context).textTheme.headline2?.copyWith(color: Colors.white, fontWeight: FontWeight.w600, fontSize: 12)
+                  ),
+                  SizedBox(width: 5,),
+                  Text(
+                    price.toString(),
+                    style: Theme.of(context).textTheme.headline2?.copyWith(color: Colors.white, decoration: TextDecoration.lineThrough, fontSize: 10,),
+                    overflow: TextOverflow.ellipsis,
+                  ),
+                ],
               ),
-              if (priceSale != null)
-                Row(
-                  children: [
-                    SizedBox(width: 5,),
-                    Text(
-                      '5000', 
-                      style: Theme.of(context).textTheme.headline2?.copyWith(color: Colors.white, decoration: TextDecoration.lineThrough, fontSize: 10,),
-                      overflow: TextOverflow.ellipsis,
-                    ),
-                  ],
-                ),
             ],
           ),
         ),

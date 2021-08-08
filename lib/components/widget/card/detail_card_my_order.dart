@@ -78,7 +78,18 @@ class _DetailCardMyOrderState extends State<DetailCardMyOrder> {
                               ),
                               child: ClipRRect(
                                 borderRadius: BorderRadius.circular(10),
-                                child: Image.network(snapshot.data!.foods[i].preview, fit: BoxFit.cover,)
+                                child: Image.network(
+                                  snapshot.data!.foods[i].preview ?? '', 
+                                  fit: BoxFit.cover,
+                                  errorBuilder: (BuildContext context, Object exception, StackTrace? stackTrace) {
+                                    return Center(
+                                      child: Image.asset(
+                                        'assets/img/image_not_found.jpg',
+                                        fit: BoxFit.fitWidth,
+                                      )
+                                    );
+                                  },
+                                )
                               ),
                             ),
                           ),

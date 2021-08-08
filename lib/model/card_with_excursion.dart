@@ -10,7 +10,7 @@ class CardWithExcursionModel implements ModelInterface {
   String? date;
   String? duration;
   int? active;
-  int? price;
+  String? price;
   String? phone;
   String? guide;
 
@@ -35,7 +35,7 @@ class CardWithExcursionModel implements ModelInterface {
     active: jsonMap['active'] ?? 0,
     guide: jsonMap['guide'] ?? null,
     phone: jsonMap['phone'] ?? null,
-    price: jsonMap['price'] ?? null,
+    price: jsonMap['price'] != null ? jsonMap['price'].toString() : null,
     destination: jsonMap['destination'] ?? null,
     date: jsonMap['date'] ?? null,
     image: jsonMap['preview'] ?? null,

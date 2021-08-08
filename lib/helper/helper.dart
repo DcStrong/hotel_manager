@@ -4,6 +4,18 @@ import 'package:intl/intl.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class Helper {
+  maskForPhone(String phone) {
+    if(phone[0] != '+') {
+      phone = '+${phone}';
+    }
+    String formattedPhoneNumber = 
+      phone.substring(0, 2)
+      + " (" + phone.substring(2,5) + ") "
+      +  phone.substring(5,8) + "-"
+      + phone.substring(8,10) + '-'
+      + phone.substring(10,phone.length);
+    return formattedPhoneNumber;
+  }
 
   Future<String> selectDate(BuildContext context) async {
     DateTime selectedDate = DateTime.now();
@@ -52,6 +64,24 @@ class Helper {
     }
   }
 
+  allertDialog(BuildContext context) {
+    showDialog<String>(
+      context: context,
+      builder: (BuildContext _context) => AlertDialog(
+        content: const Text('Спасибо за заявку. В течении 15-20 минут Вам перезвонят, ожидайте звонка'),
+        actions: <Widget>[
+          TextButton(
+            onPressed: () {
+              Navigator.pop(_context);
+              Navigator.pop(context);
+            },
+            child: Text('ОК'),
+          ),
+        ],
+      ),
+    );
+  }
+
   void showMessageSnackBar(BuildContext context, title) {
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
@@ -92,7 +122,7 @@ class Helper {
     var result = await showDialog(
       context: context,
       builder: (context) =>
-          FutureProgressDialog(getFuture(func), message: Text('Loading...')),
+          FutureProgressDialog(getFuture(func), message: Text('Отправка...')),
     );
     // if(result)
     ScaffoldMessenger.of(context).showSnackBar(
@@ -104,8 +134,8 @@ class Helper {
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               Text(
-                result 
-                ? 'Заявка успешно отправлена' 
+                result
+                ? 'Заявка успешно отправлена'
                 : 'Проверьте данные и повторите попытку'
               ),
               Icon(result ? Icons.done : Icons.close, color: result ? Colors.green : Colors.red,)
@@ -123,7 +153,7 @@ class Helper {
       ),
     );
     if(result) {
-      Navigator.of(context).pop();
+      allertDialog(context);
       return result;
     }
 

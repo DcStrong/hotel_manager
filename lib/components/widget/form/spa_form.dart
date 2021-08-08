@@ -52,6 +52,7 @@ class _SpaFormState extends State<SpaForm> {
             child: Column(
               mainAxisSize: MainAxisSize.max,
               children: [
+              Text('Укажите удобное для вас время и дату. С вами свяжется менеджер для подтверждения.'),
               Row(
                 children: [
                   Expanded(

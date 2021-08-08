@@ -75,7 +75,6 @@ class _SpaProductListState extends State<SpaProductList> {
     );
   }
 
-  
   void _scrollListener() async {
     if (_scrollController.offset >= _scrollController.position.maxScrollExtent &&
       !_scrollController.position.outOfRange && _loadMore) {

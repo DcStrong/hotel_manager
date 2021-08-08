@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:hotel_manager/components/widget/html_widget.dart';
 import 'package:hotel_manager/components/widget/neumorphic_icon_container.dart';
+import 'package:hotel_manager/helper/helper.dart';
 import 'package:hotel_manager/interface/widget_interface.dart';
 import 'package:hotel_manager/model/card_with_excursion.dart';
 
@@ -11,7 +12,7 @@ class CardWithExcursionType extends StatelessWidget implements WidgetInterface {
 
   @override
   Widget build(BuildContext context) {
-        return Container(
+    return Container(
       padding: EdgeInsets.only(left: 12, right: 12),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -31,25 +32,15 @@ class CardWithExcursionType extends StatelessWidget implements WidgetInterface {
           if(cardModel.duration != null)
           iconContainerForCard(context, 'assets/icons/clock.png', cardModel.duration!),
           if(cardModel.price != null)
-          Row(
-            children: [
-              SizedBox(height: 6),
-              iconContainerForCard(context, 'assets/icons/ruble.png', cardModel.price.toString()),
-            ],
-          ),
+          iconContainerForCard(context, 'assets/icons/ruble.png', cardModel.price.toString()),
           if(cardModel.guide != null)
-          Row(
-            children: [
-              SizedBox(height: 6),
-              iconContainerForCard(context, 'assets/icons/personal.png', cardModel.guide!),
-            ],
-          ),
+          iconContainerForCard(context, 'assets/icons/personal.png', cardModel.guide!),
           if(cardModel.phone != null)
-          Row(
-            children: [
-              SizedBox(height: 6),
-              iconContainerForCard(context, 'assets/icons/telephone.png', cardModel.phone!),
-            ],
+          InkWell(
+            onTap: () {
+              helper.launchUrl("tel:${cardModel.phone}");
+            },
+            child: iconContainerForCard(context, 'assets/icons/telephone.png', cardModel.phone!)
           ),
           SizedBox(height: 15,),
           HtmlWidget(cardModel.body ?? ''),

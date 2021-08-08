@@ -16,12 +16,11 @@ class ProfileHelp extends StatefulWidget {
 class _ProfileHelpState extends State<ProfileHelp> {
 
   Widget contactSection(String name, String phone) {
-    String formattedPhoneNumber = phone.substring(0, 2) + " (" + phone.substring(2,5) + ") " +  phone.substring(5,8) + "-" + phone.substring(8,10) + '-' + phone.substring(10,phone.length);
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(name, style: Theme.of(context).textTheme.headline2,),
-        buttonText(formattedPhoneNumber, context, isPadding: false, func: () {
+        buttonText(helper.maskForPhone(phone), context, isPadding: false, func: () {
           helper.launchUrl("tel:$phone");
         }),
       ],
@@ -45,7 +44,7 @@ class _ProfileHelpState extends State<ProfileHelp> {
             if(snapshot.hasData) {
               return ListView.separated(
                 separatorBuilder: (ctx, i) {
-                  return Divider(color: Colors.grey.withOpacity(0), thickness: 1,);
+                  return Divider(thickness: 1, color: Colors.grey.withOpacity(0.3));
                 },
                 shrinkWrap: true,
                 itemCount: snapshot.data!.length,

@@ -2,6 +2,7 @@
 
 // ignore: must_be_immutable
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:hotel_manager/components/tab_navigator/tab_item.dart';
 import 'package:hotel_manager/provider/basket_product.dart';
 import 'package:provider/provider.dart';
@@ -84,6 +85,8 @@ class _TabNavigatorState extends State<TabNavigator> {
         final isFirstRouteInCurrentTab = navigatorState.canPop();
         if (isFirstRouteInCurrentTab) {
           navigatorState.pop();
+        } else {
+          SystemNavigator.pop();
         }
         return false;
       },

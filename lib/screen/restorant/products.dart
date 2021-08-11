@@ -27,26 +27,23 @@ class _ProductsScreenState extends State<ProductsScreen> {
   bool multiple = false;
   double? _width;
   double? _heightImage = 150;
-
   ScrollController _scrollController = ScrollController();
   int page = 2;
   bool _isLoad = false;
   bool _loadMore = true;
+  int? categoryId;
 
 
   void _scrollListener() async {
     if (_scrollController.offset >= _scrollController.position.maxScrollExtent &&
       !_scrollController.position.outOfRange && _loadMore) {
-      setState(() {
-       _isLoad = true;
-      });
-
-      List<Food> result = await ApiRouter.getRestourantFoods(widget.id, page: page);
-
+      List<Food> result = [];
+      result = await ApiRouter.getRestourantFoods(widget.id, page: page, categoryId: categoryId);
+  
       if(result.length > 0) {
         setState(() {
           foods.addAll(result);
-          page++;
+          ++page;
           _isLoad = false;
         });
       } else {
@@ -111,10 +108,57 @@ class _ProductsScreenState extends State<ProductsScreen> {
   }
 
   getResoutantFoods() async {
-    List<Food> result = await ApiRouter.getRestourantFoods(widget.id);
+    List<Food> result = await ApiRouter.getRestourantFoods(widget.id, page: 1);
     setState(() {
       foods = result;
     });
+  }
+
+  Widget buttonText(String text, int id, BuildContext context) {
+    final ButtonStyle textButtonStyle = TextButton.styleFrom(
+      primary: ConfigColor.assentColor,
+      minimumSize: Size(88, 36),
+      padding: EdgeInsets.symmetric(horizontal: 16),
+    );
+
+    return Container(
+      decoration: BoxDecoration(
+        color: categoryId == id ? ConfigColor.assentColor : Colors.white,
+        borderRadius: BorderRadius.circular(8),
+      ),
+      child: TextButton(
+        style: textButtonStyle,
+        onPressed: () async {
+          foods.clear();
+          if(categoryId == id) {
+            setState(() {
+              _isLoad = true;
+              _loadMore = true;
+              page = 2;
+              categoryId = null;
+            });
+            List<Food> result = await ApiRouter.getRestourantFoods(widget.id, categoryId: categoryId);
+            setState(() {
+              foods = result;
+              _isLoad = false;
+            });
+          } else {
+            setState(() {
+              _isLoad = true;
+              _loadMore = true;
+              page = 2;
+              categoryId = id;
+            });
+            List<Food> result = await ApiRouter.getRestourantFoods(widget.id, categoryId: categoryId);
+            setState(() {
+              foods = result;
+              _isLoad = false;
+            });
+          }
+        },
+        child: Text(text, style: TextStyle(fontFamily: 'MontseratMedium', fontSize: 16, fontWeight: FontWeight.w600, color: categoryId == id ? Colors.white : ConfigColor.assentColor),),
+      ),
+    );
   }
 
   Widget appBar() {
@@ -154,19 +198,7 @@ class _ProductsScreenState extends State<ProductsScreen> {
                     color: ConfigColor.assentColor,
                   ),
                   onTap: () {
-                    if(multiple) {
-                      setState(() {
-                        _widthCard = _width! / 2;
-                        _heightImage = _widthCard! - 40;
-                        multiple = !multiple;
-                      });
-                    } else {
-                      setState(() {
-                        _widthCard = _width;
-                        _heightImage = 200;
-                        multiple = !multiple;
-                      });
-                    }
+                    
                   },
                 ),
               ),
@@ -382,22 +414,35 @@ void showBottomSheet(DetailFood detail) {
         child: Column(
           children: [
             appBar(),
-            // FutureBuilder(
-            //   future: ApiRouter.getProductCategories(1),
-            //   builder: (ctx, AsyncSnapshot snapshot) {
-            //     return Container();
-            //   }
-            // ),
-            // buttonElevated('te', context, () {ApiRouter.getProductCategories(1);}),
+            FutureBuilder(
+              future: ApiRouter.getProductCategories(widget.id),
+              builder: (ctx, AsyncSnapshot snapshot) {
+                if(snapshot.hasData) {
+                  return Container(
+                    margin: EdgeInsets.only(bottom: 10, left: 10),
+                    height: 30,
+                    child: ListView.builder(
+                      shrinkWrap: true,
+                      itemCount: snapshot.data?.length,
+                      scrollDirection: Axis.horizontal,
+                      itemBuilder: (ctx, i) {
+                        return buttonText(snapshot.data?[i]['title'], snapshot.data?[i]['id'], context);
+                      }
+                    ),
+                  );
+                }
+                return Container();
+              }
+            ),
             Expanded(
-              child: RefreshIndicator(
-                onRefresh: _refresh,
+              child: Container(
+                // onRefresh: _refresh,
                 child: GridView.builder(
                   controller: _scrollController,
                   itemCount: foods.length,
                   gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
                     crossAxisCount: 2,
-                    childAspectRatio: 0.5,
+                    childAspectRatio: 0.6,
                     crossAxisSpacing: 4.0,
                     mainAxisSpacing: 4.0
                   ),
@@ -405,12 +450,6 @@ void showBottomSheet(DetailFood detail) {
                     return cardProduct(foods[i]);
                   }
                 ),
-                // child: SingleChildScrollView(
-                //   controller: _scrollController,
-                //   child: Wrap(
-                //     children: foods.map((product) => cardProduct(product)).toList(),
-                //   ),
-                // ),
               ),
             ),
             _isLoad ?

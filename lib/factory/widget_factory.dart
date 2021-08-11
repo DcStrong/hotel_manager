@@ -1,11 +1,3 @@
-// WidgetFactory(): WidgetInterface
-//   registerCreator(Creator: CreatorInterface)
-//     this.creators.push(Creator)
-
-//   createWidget(model: ModelInterface): WidgetInterface
-//     return this.creators.some(Creator => Creator.createWidget(model))
-// 
-
 import 'package:hotel_manager/interface/model_interface.dart';
 import 'package:hotel_manager/interface/widget_creator.dart';
 

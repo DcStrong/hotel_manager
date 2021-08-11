@@ -297,12 +297,12 @@ class ApiRouter {
     }
   }
 
-  static Future getProductCategories(int id) async {
+  static Future<List> getProductCategories(int restourantId) async {
     dio.options.headers['Content-Type'] = 'application/json';
     dio.options.headers['Accept'] = 'application/json';
 
-    var response = await dio.get('client/food-categories');
-    print(response);
+    var response = await dio.get('client/food-categories', queryParameters: {'restaurant_id': restourantId });
+    return response.data['data'];
   }
 
   static Future<bool> createRequestForSpa(SpaFormModel formModel) async {
@@ -362,6 +362,7 @@ class ApiRouter {
   }
 
   static Future<List<Food>> getRestourantFoods(int id, {int? categoryId, int? page = 1}) async {
+    print(page);
     List<Food> data = [];
     Map<String, dynamic> params = {
      'restaurant_id': id,

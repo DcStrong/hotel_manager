@@ -32,6 +32,7 @@ class _ProductsScreenState extends State<ProductsScreen> {
   bool _isLoad = false;
   bool _loadMore = true;
   int? categoryId;
+  bool _isSearch = false;
 
 
   void _scrollListener() async {
@@ -114,7 +115,7 @@ class _ProductsScreenState extends State<ProductsScreen> {
     });
   }
 
-  Widget buttonText(String text, int id, BuildContext context) {
+  Widget foodCategory(String text, int id, BuildContext context) {
     final ButtonStyle textButtonStyle = TextButton.styleFrom(
       primary: ConfigColor.assentColor,
       minimumSize: Size(88, 36),
@@ -122,6 +123,7 @@ class _ProductsScreenState extends State<ProductsScreen> {
     );
 
     return Container(
+      height: 40,
       decoration: BoxDecoration(
         color: categoryId == id ? ConfigColor.assentColor : Colors.white,
         borderRadius: BorderRadius.circular(8),
@@ -155,6 +157,9 @@ class _ProductsScreenState extends State<ProductsScreen> {
               _isLoad = false;
             });
           }
+          setState(() {
+            _isSearch = false;
+          });
         },
         child: Text(text, style: TextStyle(fontFamily: 'MontseratMedium', fontSize: 16, fontWeight: FontWeight.w600, color: categoryId == id ? Colors.white : ConfigColor.assentColor),),
       ),
@@ -194,11 +199,13 @@ class _ProductsScreenState extends State<ProductsScreen> {
                   borderRadius:
                       BorderRadius.circular(AppBar().preferredSize.height),
                   child: Icon(
-                    multiple ? Icons.dashboard : Icons.view_agenda,
+                    _isSearch ? Icons.dashboard : Icons.view_agenda,
                     color: ConfigColor.assentColor,
                   ),
                   onTap: () {
-                    
+                    setState(() {
+                      _isSearch = !_isSearch;
+                    });
                   },
                 ),
               ),
@@ -209,7 +216,7 @@ class _ProductsScreenState extends State<ProductsScreen> {
     );
   }
 
-  
+
 void showBottomSheet(DetailFood detail) {
   double padding = 8.0;
   showModalBottomSheet(
@@ -281,7 +288,7 @@ void showBottomSheet(DetailFood detail) {
                             restaurantId: detail.restourantId!,
                             price: detail.price,
                             discountPrice: detail.discountPrice,
-                            weight: detail.weight,
+                            weight: detail.weight.toString(),
                           );
                           if (user.userProfile.token != null) {
                             store.addBasketProduct(product);
@@ -419,17 +426,41 @@ void showBottomSheet(DetailFood detail) {
               builder: (ctx, AsyncSnapshot snapshot) {
                 if(snapshot.hasData) {
                   return Container(
-                    margin: EdgeInsets.only(bottom: 10, left: 10),
-                    height: 30,
-                    child: ListView.builder(
-                      shrinkWrap: true,
-                      itemCount: snapshot.data?.length,
-                      scrollDirection: Axis.horizontal,
-                      itemBuilder: (ctx, i) {
-                        return buttonText(snapshot.data?[i]['title'], snapshot.data?[i]['id'], context);
-                      }
+                    height: _isSearch ? MediaQuery.of(context).size.height - 200 : 32,
+                    child: SingleChildScrollView(
+                      scrollDirection: _isSearch ? Axis.vertical : Axis.horizontal,
+                      child: _isSearch ?
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        children: snapshot.data.map((e) =>
+                          Container(
+                            child: foodCategory(e['title'], e['id'], context)
+                          )).toList().cast<Widget>()
+                      )
+                      : 
+                      Row(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        children: snapshot.data.map((e) =>
+                          Container(
+                            child: foodCategory(e['title'], e['id'], context)
+                          )).toList().cast<Widget>()
+                      )
                     ),
                   );
+                  // return Container(
+                  //   margin: EdgeInsets.only(bottom: 10, left: 10),
+                  //   // height: 30,
+                  //   child: ListView.builder(
+                  //     shrinkWrap: true,
+                  //     itemCount: snapshot.data?.length,
+                  //     scrollDirection: Axis.vertical,
+                  //     itemBuilder: (ctx, i) {
+                  //       return foodCategory(snapshot.data?[i]['title'], snapshot.data?[i]['id'], context);
+                  //     }
+                  //   ),
+                  // );
                 }
                 return Container();
               }

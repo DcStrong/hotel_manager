@@ -6,7 +6,7 @@ class Food {
   int? discountPrice;
   int restaurantId;
   int? foodCategoryId;
-  int? weight;
+  String? weight;
   int? quantity;
 
   Food({
@@ -31,7 +31,7 @@ class Food {
     price: jsonMap['price'],
     restaurantId: jsonMap['restaurant_id'],
     foodCategoryId: jsonMap['food_category_id'] ?? null,
-    weight: jsonMap['weight'] ?? null,
+    weight: jsonMap['weight'] != null ? jsonMap['weight'].toString() : null,
     quantity: quant != null ? quant : jsonMap['quantity'] ?? 1,
   );
 

@@ -15,6 +15,88 @@ class VerticalCardRestourant extends StatefulWidget {
 }
 
 class _VerticalCardRestourantState extends State<VerticalCardRestourant> {
+
+  void showBottomSheet(Restourant restourant) {
+    double padding = 8.0;
+    showModalBottomSheet(
+      isScrollControlled: true,
+      shape: RoundedRectangleBorder(
+      borderRadius: BorderRadius.only(
+        topLeft: Radius.circular(10.0),
+        topRight: Radius.circular(10.0),
+        ),
+      ),
+      context: context,
+      builder: (context) {
+        return Container(
+          height: MediaQuery.of(context).size.height,
+          padding: EdgeInsets.only(left: 12, right: 12),
+          margin: EdgeInsets.only(bottom: 10),
+          child: SingleChildScrollView(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              children: [
+                SizedBox(height: 30,),
+                PhotoHero(
+                  photo: restourant.preview,
+                  width: MediaQuery.of(context).size.width,
+                  onTap: () {
+                    Navigator.pop(context);
+                  },
+                ),
+                SizedBox(height: 15,),
+                Text(
+                  'Время работы ${restourant.openTime} - ${restourant.closeTime}', 
+                  style: Theme.of(context).textTheme.headline2?.copyWith(fontWeight: FontWeight.w600)
+                ),
+                SizedBox(height: 5,),
+                ListView.builder(
+                  physics: NeverScrollableScrollPhysics(),
+                  shrinkWrap: true,
+                  itemCount: restourant.cuisines.length,
+                  itemBuilder: (ctx, i) {
+                    return Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          restourant.cuisines[i].title,
+                          style: Theme.of(context).textTheme.headline2,
+                        ),
+                      ],
+                    );
+                  }
+                ),
+                SizedBox(
+                  height: 5,
+                ),
+                Container(
+                  child: Text(
+                    restourant.description ?? ''
+                  ),
+                ),
+                SizedBox(
+                  height: 5,
+                ),
+                SizedBox(height: 15,),
+                Text('Среднее время доставки: ${restourant.deliveryTime}'),
+                SizedBox(height: 15,),
+                buttonElevated(
+                  'Посмотреть меню',
+                  context,
+                  () {
+                    Navigator.pop(context);
+                    Navigator.push(context, MaterialPageRoute(builder: (context) {
+                      return ProductsScreen(id: restourant.id);
+                    }));
+                  }
+                ),
+            ],),
+          ),
+        );
+      });
+  }
+
   @override
   Widget build(BuildContext context) {
     double width = MediaQuery.of(context).size.width;
@@ -37,9 +119,7 @@ class _VerticalCardRestourantState extends State<VerticalCardRestourant> {
                 photo: widget.restourant.preview,
                 width: width,
                 onTap: () {
-                  Navigator.push(context, MaterialPageRoute(builder: (context) {
-                    return DetailRestourant(restourant: widget.restourant,);
-                  }));
+                  showBottomSheet(widget.restourant);
                 },
               ),
             ),
@@ -92,92 +172,6 @@ class PhotoHero extends StatelessWidget {
               ),
             ),
           ),
-        ),
-      ),
-    );
-  }
-}
-
-
-
-class DetailRestourant extends StatelessWidget {
-  final Restourant restourant;
-  const DetailRestourant({Key? key, required this.restourant}) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text(restourant.title, style: Theme.of(context).textTheme.headline1,),
-        shadowColor: Colors.transparent,
-        backgroundColor: ConfigColor.bgColor,
-        leading: iconButtonBack(context),
-      ),
-      bottomNavigationBar: 
-        Padding(
-          padding: const EdgeInsets.all(8.0),
-          child: buttonElevated(
-            'Посмотреть меню',
-            context,
-            () {
-              Navigator.push(context, MaterialPageRoute(builder: (context) {
-                return ProductsScreen(id: restourant.id);
-              }));
-            }
-          ),
-        ),
-      body: Container(
-        padding: EdgeInsets.only(left: 12, right: 12),
-        margin: EdgeInsets.only(bottom: 10),
-        child: SingleChildScrollView(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-            children: [
-              PhotoHero(
-                photo: restourant.preview,
-                width: MediaQuery.of(context).size.width,
-                onTap: () {
-                  Navigator.pop(context);
-                },
-              ),
-              SizedBox(height: 15,),
-              Text(
-                'Время работы ${restourant.openTime} - ${restourant.closeTime}', 
-                style: Theme.of(context).textTheme.headline2?.copyWith(fontWeight: FontWeight.w600)
-              ),
-              SizedBox(height: 5,),
-              ListView.builder(
-                physics: NeverScrollableScrollPhysics(),
-                shrinkWrap: true,
-                itemCount: restourant.cuisines.length,
-                itemBuilder: (ctx, i) {
-                  return Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        restourant.cuisines[i].title,
-                        style: Theme.of(context).textTheme.headline2,
-                      ),
-                    ],
-                  );
-                }
-              ),
-              SizedBox(
-                height: 5,
-              ),
-              Container(
-                child: Text(
-                  restourant.description ?? ''
-                ),
-              ),
-              SizedBox(
-                height: 5,
-              ),
-              SizedBox(height: 15,),
-              Text('Среднее время доставки: ${restourant.deliveryTime}'),
-              SizedBox(height: 15,),
-          ],),
         ),
       ),
     );

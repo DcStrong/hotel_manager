@@ -33,10 +33,8 @@ class CardWithActivityType extends StatelessWidget implements WidgetInterface {
           HtmlWidget(cardModel.body ?? ''),
           if(cardModel.place != null)
           iconContainerForCard(context, 'assets/icons/gps.png', cardModel.place ?? ''),
-          SizedBox(height: 15,),
-          if(cardModel.time != null)
-          iconContainerForCard(context, 'assets/icons/clock.png', cardModel.time ?? ''),
-          SizedBox(height: 15,),
+          if(cardModel.date != null)
+          iconContainerForCard(context, 'assets/icons/clock.png', cardModel.date ?? ''),
           if(cardModel.price != null)
           iconContainerForCard(context, 'assets/icons/ruble.png', cardModel.price ?? ''),
           buttonElevatedCenter('Записаться', context, () {

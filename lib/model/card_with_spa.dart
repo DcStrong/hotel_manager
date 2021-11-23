@@ -10,7 +10,8 @@ class CardWithSpaModel implements ModelInterface {
   String? time;
   String? phone;
   String? master;
-  int? price;
+  String? price;
+  String? workingDays;
   int? categoryId;
   List? slider;
 
@@ -27,12 +28,14 @@ class CardWithSpaModel implements ModelInterface {
     this.master, 
     this.time,
     this.categoryId,
+    this.workingDays,
   });
 
   factory CardWithSpaModel.fromJSON(Map<String, dynamic> jsonMap) => CardWithSpaModel(
     id: jsonMap['id'] ?? null,
     title: jsonMap['title'] ?? null,
-    price: jsonMap['price'] != null ? int.parse(jsonMap['price'].toString()) : null,
+    price: jsonMap['price'] != null ? converPriceIntTOString(jsonMap['price']) : null,
+    workingDays: jsonMap['working_days'] ?? null,
     phone: jsonMap['phone'] ?? null,
     master: jsonMap['master_name'] ?? null,
     time: jsonMap['duration'] ?? null,
@@ -43,4 +46,12 @@ class CardWithSpaModel implements ModelInterface {
     categoryId: jsonMap['category_id'] ?? null,
     slider: jsonMap['slider'] ?? []
   );
+}
+
+converPriceIntTOString(dynamic price) {
+  if (price is String) {
+    return price;
+  }
+
+  return price.toString();
 }

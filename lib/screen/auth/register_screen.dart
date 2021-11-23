@@ -113,6 +113,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
           style: TextStyle(fontSize: 14),
           validator: (value) {
             if (value?.isEmpty ?? false) return 'Пожалуйста, введите пароль';
+            if (value!.length < 5) return 'Пароль должен быть больше 5 символов';
             return null;
           },
           controller: _passwordController,

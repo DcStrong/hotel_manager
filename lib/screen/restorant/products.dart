@@ -123,7 +123,7 @@ class _ProductsScreenState extends State<ProductsScreen> {
     );
 
     return Container(
-      height: 40,
+      height: 30,
       decoration: BoxDecoration(
         color: categoryId == id ? ConfigColor.assentColor : Colors.white,
         borderRadius: BorderRadius.circular(8),
@@ -161,7 +161,22 @@ class _ProductsScreenState extends State<ProductsScreen> {
             _isSearch = false;
           });
         },
-        child: Text(text, style: TextStyle(fontFamily: 'MontseratMedium', fontSize: 16, fontWeight: FontWeight.w600, color: categoryId == id ? Colors.white : ConfigColor.assentColor),),
+        child: Align(
+          alignment: Alignment.centerLeft,
+          child: Container(
+            child: Text(
+              text,
+              style: TextStyle(
+                fontFamily: 'MontseratMedium',
+                fontSize: 16,
+                fontWeight: FontWeight.w600,
+                color: categoryId == id ? Colors.white : ConfigColor.assentColor,
+              ),
+            ),
+          ),
+        ),
+
+
       ),
     );
   }
@@ -435,10 +450,11 @@ void showBottomSheet(DetailFood detail) {
                         mainAxisAlignment: MainAxisAlignment.start,
                         children: snapshot.data.map((e) =>
                           Container(
+                            padding: EdgeInsets.only(left: 8, right: 8),
                             child: foodCategory(e['title'], e['id'], context)
                           )).toList().cast<Widget>()
                       )
-                      : 
+                      :
                       Row(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         mainAxisAlignment: MainAxisAlignment.start,

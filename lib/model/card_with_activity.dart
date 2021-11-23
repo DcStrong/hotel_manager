@@ -1,4 +1,5 @@
 import 'package:hotel_manager/interface/model_interface.dart';
+import 'package:intl/intl.dart';
 
 class CardWithActivityModel implements ModelInterface {
   int? id;
@@ -32,9 +33,15 @@ class CardWithActivityModel implements ModelInterface {
     time: jsonMap['time'] ?? null,
     price: jsonMap['price'] ?? null,
     place: jsonMap['place'] ?? null,
-    date: jsonMap['date'] ?? null,
+    date: jsonMap['date'] != null ? converDate(jsonMap['date']) : null,
     image: jsonMap['preview'] ?? null,
     subtitle: jsonMap['small_description'] ?? null,
     body: jsonMap['description'] ?? null,
   );
+}
+
+converDate(String date) {
+  var dateTime = DateTime.parse(date);
+  var formatDate = DateFormat('dd-MM-yyyy HH:mm').format(dateTime);
+  return formatDate;
 }

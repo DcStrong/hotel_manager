@@ -82,7 +82,6 @@ class _ScreenProductState extends State<ScreenProduct> {
             initialData: [],
             future: ApiRouter.getSectionCard(this.widget.path, categoryId: widget.categoryId),
             builder: (ctx, AsyncSnapshot<List> snapshot) {
-              print(snapshot);
               if(snapshot.hasData) {
                 if(_listProduct.length == 0) {
                   _listProduct = snapshot.data!;

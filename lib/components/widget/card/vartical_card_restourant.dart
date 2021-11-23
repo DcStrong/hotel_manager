@@ -29,7 +29,6 @@ class _VerticalCardRestourantState extends State<VerticalCardRestourant> {
       context: context,
       builder: (context) {
         return Container(
-          height: MediaQuery.of(context).size.height,
           padding: EdgeInsets.only(left: 12, right: 12),
           margin: EdgeInsets.only(bottom: 10),
           child: SingleChildScrollView(
@@ -37,7 +36,7 @@ class _VerticalCardRestourantState extends State<VerticalCardRestourant> {
               crossAxisAlignment: CrossAxisAlignment.start,
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
-                SizedBox(height: 30,),
+                SizedBox(height: 12,),
                 PhotoHero(
                   photo: restourant.preview,
                   width: MediaQuery.of(context).size.width,

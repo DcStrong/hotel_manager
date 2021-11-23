@@ -35,6 +35,7 @@ class _AuthScreenState extends State<AuthScreen> {
       key: _formKey,
       child: Column(children: [
         TextFormField(
+          keyboardType: TextInputType.phone,
           style: TextStyle(fontSize: 14),
           validator: (value) {
             if (value?.isEmpty ?? false) return 'Поле не может быть пустым';
@@ -51,7 +52,7 @@ class _AuthScreenState extends State<AuthScreen> {
                 color: Colors.grey, width: 1.0),
             ),
             labelStyle: TextStyle(color: Colors.grey, fontSize: 12),
-            labelText: 'Телефон или e-mail',
+            labelText: 'Телефон',
           ),
         ),
         TextFormField(
@@ -75,8 +76,8 @@ class _AuthScreenState extends State<AuthScreen> {
             labelText: 'Пароль',
           ),
         ),
-        buttonText('Восстановить пароль', context, color: ConfigColor.additionalColor),
-        buttonText('Зарегестрироваться', context, func: () {Navigator.pushNamed(context, 'register');}),
+        // buttonText('Восстановить пароль', context, color: ConfigColor.additionalColor),
+        buttonText('Зарегистрироваться', context, func: () {Navigator.pushNamed(context, 'register');}),
       ],)
     );
   }

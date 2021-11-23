@@ -115,7 +115,7 @@ class _DetailCardState extends State<DetailCard> {
         },
         body: SingleChildScrollView(
           physics: NeverScrollableScrollPhysics(),
-          child: widgets 
+          child: widgets
           ?? Container(
             child: Center(
               child: CircularProgressIndicator(),

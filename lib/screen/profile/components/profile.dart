@@ -76,9 +76,40 @@ class _ProfileState extends State<Profile> {
         child: Container(
           height: MediaQuery.of(context).size.height,
           child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
+              Padding(
+                padding: EdgeInsets.only(left: 30, right: 10, bottom: 20),
+                child: Text(
+                  _user?.name ?? '',
+                  style: TextStyle(
+                  fontFamily: 'MontseratMedium',
+                  color: ConfigColor.assentColor,
+                  fontSize: 14,
+                ),),
+              ),
+              Padding(
+                padding: EdgeInsets.only(left: 30, right: 10, bottom: 20),
+                child: Text(
+                  _user?.phone ?? '',
+                  style: TextStyle(
+                  fontFamily: 'MontseratMedium',
+                  color: ConfigColor.assentColor,
+                  fontSize: 14,
+                ),),
+              ),
+              Padding(
+                padding: EdgeInsets.only(left: 30, right: 10, bottom: 20),
+                child: Text(
+                  _user?.email ?? '',
+                  style: TextStyle(
+                  fontFamily: 'MontseratMedium',
+                  color: ConfigColor.assentColor,
+                  fontSize: 14,
+                ),),
+              ),
               // ProfilePic(),
-              SizedBox(height: 40,),
+              SizedBox(height: 20,),
               outlineButton(Icons.history_sharp, 'История заказов', () {
                 Navigator.pushNamed(context, 'profile_my_orders');
               }),

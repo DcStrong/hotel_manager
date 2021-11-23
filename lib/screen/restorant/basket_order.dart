@@ -42,11 +42,11 @@ class _BasketOrderState extends State<BasketOrder> {
   ];
 
   @override
-  void initState() { 
+  void initState() {
     super.initState();
     _timeController.text = _initTimeValue;
   }
-  Widget orderForm() {
+  Widget orderForm(String phone) {
     return Form(
       key: _formKey,
       child: Column(
@@ -77,7 +77,7 @@ class _BasketOrderState extends State<BasketOrder> {
                 value: value,
                 child: Padding(
                   padding: const EdgeInsets.only(right: 8.0),
-                  child: Text(value),
+                  child: Text(value, style: Theme.of(context).textTheme.headline2,),
                 ),
               );
             }).toList(),
@@ -89,6 +89,7 @@ class _BasketOrderState extends State<BasketOrder> {
             if (value?.isEmpty ?? false) return 'Поле не может быть пустым';
             return null;
           },
+          style: Theme.of(context).textTheme.headline2,
           controller: _roomNumber,
           decoration: InputDecoration(
             enabledBorder: UnderlineInputBorder(
@@ -140,6 +141,7 @@ class _BasketOrderState extends State<BasketOrder> {
           ],
         ),
         TextFormField(
+          style: Theme.of(context).textTheme.headline2,
           validator: (value) {
             if(value == _initTimeValue) return null;
             if (value?.isEmpty ?? false) return 'Поле не может быть пустым';
@@ -155,15 +157,25 @@ class _BasketOrderState extends State<BasketOrder> {
           controller: _timeController,
           onTap: () async {
             String time = await helper.selectTime(context);
+            if (time == '') {
+              time = 'К ближайшему времени';
+            }
             setState(() {
               _timeController.text = time;
             });
             FocusScope.of(context).requestFocus(new FocusNode());
           },
           decoration: InputDecoration(
-            labelStyle: TextStyle(color: ConfigColor.additionalColor),
+            labelStyle: TextStyle(color: ConfigColor.additionalColor, fontSize: 14),
             labelText: 'Доставить к'
           ),
+        ),
+        SizedBox(height: 20,),
+        Text('$phone - Ваш текущий номер телефона', style: Theme.of(context).textTheme.headline2,),
+        SizedBox(height: 20,),
+        Text(
+          'В комментариях вы можете указать другой номер телефона для связи или уточнить детали заказа',
+          style: TextStyle(color: ConfigColor.additionalColor, fontSize: 14)
         ),
         SizedBox(height: 20,),
         TextFormField(
@@ -200,43 +212,41 @@ class _BasketOrderState extends State<BasketOrder> {
       body: SingleChildScrollView(
         child: Padding(
           padding: const EdgeInsets.all(15.0),
-          child: Column(
-            children: [
-              orderForm(),
-              Consumer<Basket>(
-                builder: (BuildContext context, _store, _) {
-                  UserModel user = Provider.of<User>(context, listen: false).userProfile;
-                  return Center(
-                    child: buttonText('Заказать', context, func: () async {
-                      if(_formKey.currentState!.validate()) {
-                        List foodsByOrder = [];
-                        _store.basketInFood.forEach((e) {
-                          foodsByOrder.add({'food_id' : e.id, 'quantity': e.quantity});
-                        });
-                        FocusScope.of(context).unfocus();
-                        var res = await helper.showProgress(
-                          context, ApiRouter.sendOrder(
-                              user.token!,
-                              int.parse(_roomNumber.text),
-                              foodsByOrder,
-                              _store.totalPrice,
-                              corps,
-                              _character == SingingCharacter.delivery ? 1 : 2,
-                              _commentsController.text,
-                              _store.quantityPerson,
-                              _timeController.text
-                            )
-                          );
-                        if(res)
-                          _store.clearBasketProduct();
-                      }
-                      // helper.showProgress(context,);
-                    }),
-                  );
-                }
-              ),
-            ],
-          ),
+            child: Consumer<Basket>(
+              builder: (BuildContext context, _store, _) {
+                UserModel user = Provider.of<User>(context, listen: false).userProfile;
+                return Column(
+                  children: [
+                    orderForm(user.phone ?? ''),
+                    Center(
+                      child: buttonText('Заказать', context, func: () async {
+                        if(_formKey.currentState!.validate()) {
+                          List foodsByOrder = [];
+                          _store.basketInFood.forEach((e) {
+                            foodsByOrder.add({'food_id' : e.id, 'quantity': e.quantity});
+                          });
+                          FocusScope.of(context).unfocus();
+                          var res = await helper.showProgress(
+                            context, ApiRouter.sendOrder(
+                                user.token!,
+                                int.parse(_roomNumber.text),
+                                foodsByOrder,
+                                _store.totalPrice,
+                                corps,
+                                _character == SingingCharacter.delivery ? 1 : 2,
+                                _commentsController.text,
+                                _store.quantityPerson,
+                                _timeController.text
+                              )
+                            );
+                          if(res)
+                            _store.clearBasketProduct();
+                        }
+                        // helper.showProgress(context,);
+                      }),
+                    )]);
+              }
+            ),
         )
       )
     );

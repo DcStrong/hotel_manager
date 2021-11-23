@@ -24,7 +24,6 @@ class SpaForm extends StatefulWidget {
 
 class _SpaFormState extends State<SpaForm> {
   var maskFormatter = new MaskTextInputFormatter(mask: '+# (###) ###-##-##', filter: { "#": RegExp(r'[0-9]') });
-  UserModel? _user;
 
   final DateLocale location = EnglishDateLocale();
   final _formKey = GlobalKey<FormState>();
@@ -39,147 +38,159 @@ class _SpaFormState extends State<SpaForm> {
 
   @override
   Widget build(BuildContext context) {
-    _user = context.watch<User>().userProfile;
     return Scaffold(
       appBar: AppBar(
         leading: iconButtonBack(context),
       ),
-      body: SingleChildScrollView(
-        child: Container(
-          padding: EdgeInsets.only(top: 20, left: 15, right: 15),
-          child: Form(
-            key: _formKey,
-            child: Column(
-              mainAxisSize: MainAxisSize.max,
-              children: [
-              Text('Укажите удобное для вас время и дату. С вами свяжется менеджер для подтверждения.'),
-              Row(
-                children: [
-                  Expanded(
-                    child: TextFormField(
-                      validator: (value) {
-                        if (value?.isEmpty ?? false) return 'Не может быть пустым';
-                        return null;
-                      },
-                      controller: _dateController,
-                      onTap: () async {
-                        String date = await helper.selectDate(context);
-                        _dateController.text = date;
-                        FocusScope.of(context).requestFocus(new FocusNode());
-                      },
-                      decoration: InputDecoration(
-                        labelStyle: TextStyle(color: ConfigColor.additionalColor),
-                        labelText: 'Дата'
+      body: Consumer<User>(
+        builder: (BuildContext context, user, _) {
+          UserModel _user = user.userProfile;
+          if (_user.phone != null) {
+            _phoneController.text = _user.phone ?? '';
+          }
+          if (_user.lastName != null) {
+            _lastNameController.text = _user.lastName ?? '';
+          }
+          if (_user.name != null) {
+            _firstNameController.text = _user.name ?? '';
+          }
+          return SingleChildScrollView(
+            child: Container(
+              padding: EdgeInsets.only(top: 20, left: 15, right: 15),
+              child: Form(
+                key: _formKey,
+                child: Column(
+                  mainAxisSize: MainAxisSize.max,
+                  children: [
+                  Text('Укажите удобное для вас время и дату. С вами свяжется менеджер для подтверждения.'),
+                  Row(
+                    children: [
+                      Expanded(
+                        child: TextFormField(
+                          validator: (value) {
+                            if (value?.isEmpty ?? false) return 'Не может быть пустым';
+                            return null;
+                          },
+                          controller: _dateController,
+                          onTap: () async {
+                            String date = await helper.selectDate(context);
+                            _dateController.text = date;
+                            FocusScope.of(context).requestFocus(new FocusNode());
+                          },
+                          decoration: InputDecoration(
+                            labelStyle: TextStyle(color: ConfigColor.additionalColor),
+                            labelText: 'Дата'
+                          ),
+                        ),
                       ),
+                      SizedBox(width: 25,),
+                      Expanded(
+                        child: TextFormField(
+                          validator: (value) {
+                            if (value?.isEmpty ?? false) return 'Не может быть пустым';
+                            String hour = value?.split(':')[0] as String;
+                            if(int.parse(hour) >= 21) {
+                              helper.showMessageSnackBar(
+                                context, 'Извините ресторан в это время не работает, установите другое время или дату'
+                              );
+                              return 'Извините время или дату';
+                            }
+                            return null;
+                          },
+                          controller: _timeController,
+                          onTap: () async {
+                            String time = await helper.selectTime(context);
+                            setState(() {
+                              _timeController.text = time;
+                            });
+                            FocusScope.of(context).requestFocus(new FocusNode());
+                          },
+                          decoration: InputDecoration(
+                            labelStyle: TextStyle(color: ConfigColor.additionalColor),
+                            labelText: 'Время'
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                  TextFormField(
+                    validator: (value) {
+                      if (value?.isEmpty ?? false) return 'Поле не может быть пустым';
+                      return null;
+                    },
+                    controller: _lastNameController,
+                    decoration: InputDecoration(
+                      labelStyle: TextStyle(color: ConfigColor.additionalColor),
+                      labelText: 'Фамилия'
                     ),
                   ),
-                  SizedBox(width: 25,),
-                  Expanded(
-                    child: TextFormField(
-                      validator: (value) {
-                        if (value?.isEmpty ?? false) return 'Не может быть пустым';
-                        String hour = value?.split(':')[0] as String;
-                        if(int.parse(hour) >= 21) {
-                          helper.showMessageSnackBar(
-                            context, 'Извините ресторан в это время не работает, установите другое время или дату'
-                          );
-                          return 'Извините время или дату';
-                        }
-                        return null;
-                      },
-                      controller: _timeController,
-                      onTap: () async {
-                        String time = await helper.selectTime(context);
-                        setState(() {
-                          _timeController.text = time;
-                        });
-                        FocusScope.of(context).requestFocus(new FocusNode());
-                      },
-                      decoration: InputDecoration(
-                        labelStyle: TextStyle(color: ConfigColor.additionalColor),
-                        labelText: 'Время'
-                      ),
+                  TextFormField(
+                    validator: (value) {
+                      if (value?.isEmpty ?? false) return 'Поле не может быть пустым';
+                      return null;
+                    },
+                    controller: _firstNameController,
+                    decoration: InputDecoration(
+                      labelStyle: TextStyle(color: ConfigColor.additionalColor),
+                      labelText: 'Имя'
                     ),
                   ),
-                ],
-              ),
-              TextFormField(
-                validator: (value) {
-                  if (value?.isEmpty ?? false) return 'Поле не может быть пустым';
-                  return null;
-                },
-                controller: _lastNameController,
-                decoration: InputDecoration(
-                  labelStyle: TextStyle(color: ConfigColor.additionalColor),
-                  labelText: 'Фамилия'
-                ),
-              ),
-              TextFormField(
-                validator: (value) {
-                  if (value?.isEmpty ?? false) return 'Поле не может быть пустым';
-                  return null;
-                },
-                controller: _firstNameController,
-                decoration: InputDecoration(
-                  labelStyle: TextStyle(color: ConfigColor.additionalColor),
-                  labelText: 'Имя'
-                ),
-              ),
-              TextFormField(
-                validator: (value) {
-                  if (value?.isEmpty ?? false) return 'Поле не может быть пустым';
-                  return null;
-                },
-                keyboardType: TextInputType.phone,
-                inputFormatters: [maskFormatter],
-                controller: _phoneController,
-                decoration: InputDecoration(
-                  labelStyle: TextStyle(color: ConfigColor.additionalColor),
-                  labelText: 'Телефон'
-                ),
-              ),
-              SizedBox(height: 15,),
-              TextFormField(
-                keyboardType: TextInputType.multiline,
-                maxLines: 5,
-                controller: _commentsController,
-                decoration: InputDecoration(
-                  enabledBorder: OutlineInputBorder(
-                  borderSide: BorderSide(width: 2, color: ConfigColor.additionalColor),
-                  borderRadius: BorderRadius.circular(10),
+                  TextFormField(
+                    validator: (value) {
+                      if (value?.isEmpty ?? false) return 'Поле не может быть пустым';
+                      return null;
+                    },
+                    keyboardType: TextInputType.phone,
+                    inputFormatters: [maskFormatter],
+                    controller: _phoneController,
+                    decoration: InputDecoration(
+                      labelStyle: TextStyle(color: ConfigColor.additionalColor),
+                      labelText: 'Телефон'
+                    ),
                   ),
-                  focusedBorder: OutlineInputBorder(
-                    borderSide: BorderSide(width: 2, color: ConfigColor.assentColor),
-                    borderRadius: BorderRadius.circular(10),
+                  SizedBox(height: 15,),
+                  TextFormField(
+                    keyboardType: TextInputType.multiline,
+                    maxLines: 5,
+                    controller: _commentsController,
+                    decoration: InputDecoration(
+                      enabledBorder: OutlineInputBorder(
+                      borderSide: BorderSide(width: 2, color: ConfigColor.additionalColor),
+                      borderRadius: BorderRadius.circular(10),
+                      ),
+                      focusedBorder: OutlineInputBorder(
+                        borderSide: BorderSide(width: 2, color: ConfigColor.assentColor),
+                        borderRadius: BorderRadius.circular(10),
+                      ),
+                      labelText: 'Комментарий',
+                      labelStyle: TextStyle(color: ConfigColor.additionalColor),
+                      alignLabelWithHint: true
+                    ),
                   ),
-                  labelText: 'Комментарий',
-                  labelStyle: TextStyle(color: ConfigColor.additionalColor),
-                  alignLabelWithHint: true
-                ),
+                  SizedBox(height: 15,),
+                  buttonElevatedCenter('Записаться', context, () async {
+                    if(_formKey.currentState!.validate()) {
+                      FocusScope.of(context).unfocus();
+                      String dateString = _dateController.text + ' ' + _timeController.text;
+                      DateTime tempDate = new DateFormat("MM/dd/yyyy HH:mm").parse(dateString);
+                      SpaFormModel form = new SpaFormModel(
+                        phone: maskFormatter.getUnmaskedText(),
+                        categoryId: widget.categoryId ?? 0,
+                        date: tempDate,
+                        firstName: _firstNameController.text,
+                        lastName: _lastNameController.text,
+                        procedureId: widget.procedureId ?? 0,
+                        ownerId: _user.id ?? null
+                      );
+                      helper.showProgress(context, ApiRouter.createRequestForSpa(form));
+                    }
+                  }),
+                  SizedBox(height: 15,),
+                ],),
               ),
-              SizedBox(height: 15,),
-              buttonElevatedCenter('Записаться', context, () async {
-                if(_formKey.currentState!.validate()) {
-                  FocusScope.of(context).unfocus();
-                  String dateString = _dateController.text + ' ' + _timeController.text;
-                  DateTime tempDate = new DateFormat("MM/dd/yyyy HH:mm").parse(dateString);
-                  SpaFormModel form = new SpaFormModel(
-                    phone: maskFormatter.getUnmaskedText(),
-                    categoryId: widget.categoryId ?? 0,
-                    date: tempDate,
-                    firstName: _firstNameController.text,
-                    lastName: _lastNameController.text,
-                    procedureId: widget.procedureId ?? 0,
-                    ownerId: _user?.id
-                  );
-                  helper.showProgress(context, ApiRouter.createRequestForSpa(form));
-                }
-              }),
-              SizedBox(height: 15,),
-            ],),
-          ),
-        ),
-      ),
+            ),
+          );
+      }),
     );
   }
 }

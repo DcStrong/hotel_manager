@@ -8,9 +8,17 @@ import 'package:hotel_manager/provider/widget_factory_provider.dart';
 import 'package:hotel_manager/routes.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
+import 'package:app_tracking_transparency/app_tracking_transparency.dart';
 
-void main() => runApp(
-   MultiProvider(
+
+void main() async {
+
+  WidgetsFlutterBinding.ensureInitialized();
+
+  final TrackingStatus status = await AppTrackingTransparency.requestTrackingAuthorization();
+
+  runApp(
+    MultiProvider(
       providers: [
         ChangeNotifierProvider(create: (_) => User()),
         ChangeNotifierProvider(create: (_) => HomeMenuProvider()),
@@ -18,7 +26,8 @@ void main() => runApp(
       ],
       child:  MyApp(),
     ),
-);
+  );
+}
 
 class MyApp extends StatefulWidget {
   // This widget is the root of your application.
@@ -35,7 +44,7 @@ class MyAppState extends State<MyApp> {
       DeviceOrientation.portraitUp,
       DeviceOrientation.portraitDown,
     ]);
-    
+
     return WidgetFactoryProvider(
       child: MaterialApp(
         localizationsDelegates: [
@@ -45,9 +54,9 @@ class MyAppState extends State<MyApp> {
         initialRoute: 'checkUserInHotel',
         theme: ThemeData(
           inputDecorationTheme: InputDecorationTheme(
-            enabledBorder: UnderlineInputBorder(      
-              borderSide: BorderSide(color: ConfigColor.additionalColor),   
-            ),  
+            enabledBorder: UnderlineInputBorder(
+              borderSide: BorderSide(color: ConfigColor.additionalColor),
+            ),
             focusedBorder: UnderlineInputBorder(
               borderSide: BorderSide(color: ConfigColor.assentColor, width: 3),
             ),

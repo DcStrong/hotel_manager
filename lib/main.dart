@@ -8,14 +8,11 @@ import 'package:hotel_manager/provider/widget_factory_provider.dart';
 import 'package:hotel_manager/routes.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
-import 'package:app_tracking_transparency/app_tracking_transparency.dart';
 
 
 void main() async {
 
   WidgetsFlutterBinding.ensureInitialized();
-
-  final TrackingStatus status = await AppTrackingTransparency.requestTrackingAuthorization();
 
   runApp(
     MultiProvider(

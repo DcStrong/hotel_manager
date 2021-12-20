@@ -161,7 +161,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Авторизация', style: Theme.of(context).textTheme.headline1,),
+        title: Text('Регистрация', style: Theme.of(context).textTheme.headline1,),
         shadowColor: Colors.transparent,
       ),
       body: Container(

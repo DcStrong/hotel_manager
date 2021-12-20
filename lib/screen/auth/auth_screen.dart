@@ -77,6 +77,7 @@ class _AuthScreenState extends State<AuthScreen> {
           ),
         ),
         // buttonText('Восстановить пароль', context, color: ConfigColor.additionalColor),
+        buttonText('Восстановить пароль', context, func: () {Navigator.pushNamed(context, 'reset_password');}),
         buttonText('Зарегистрироваться', context, func: () {Navigator.pushNamed(context, 'register');}),
       ],)
     );
@@ -108,7 +109,7 @@ class _AuthScreenState extends State<AuthScreen> {
                   if(widget.pathRoute) {
                     Navigator.pop(context);
                     return;
-                  } 
+                  }
                   await Navigator.pushNamedAndRemoveUntil(context, 'profile', (route) => false);
 
                 } on MessageException catch(e) {

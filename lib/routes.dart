@@ -3,6 +3,7 @@ import 'package:hotel_manager/components/tab_navigator/tab_navigator.dart';
 import 'package:hotel_manager/screen/animation.dart';
 import 'package:hotel_manager/screen/auth/auth_screen.dart';
 import 'package:hotel_manager/screen/auth/register_screen.dart';
+import 'package:hotel_manager/screen/auth/reset_password.dart';
 import 'package:hotel_manager/screen/check_user_in_hotel.dart';
 import 'package:hotel_manager/screen/home.dart';
 import 'package:hotel_manager/screen/product_section/activities.dart';
@@ -38,6 +39,8 @@ class RouteGenerator {
         return MaterialPageRoute(builder: (_) => AuthScreen());
       case 'register':
         return MaterialPageRoute(builder: (_) => RegisterScreen());
+      case 'reset_password':
+        return MaterialPageRoute(builder: (_) => ResetPasswordPage());
       case 'animation':
         return MaterialPageRoute(builder: (_) => AnimationScreen());
       case 'profile':

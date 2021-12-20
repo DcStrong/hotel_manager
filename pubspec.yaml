@@ -41,6 +41,8 @@ dependencies:
   date_format: ^2.0.2
   future_progress_dialog: ^0.2.0
   app_tracking_transparency: ^2.0.2+1
+  timer_count_down: ^2.2.1
+  # cloudpayments: ^0.3.0
 
 dev_dependencies:
   flutter_test:

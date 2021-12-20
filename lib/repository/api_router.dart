@@ -406,6 +406,20 @@ class ApiRouter {
     return DetailFood.fromJSON(responseMap);
   }
 
+  static Future<void> sendSmsForResetPassword(String phone) async {
+    await dio.post('reset_password_request', queryParameters: { "phone": phone });
+  }
+
+  static Future<void> resetPassword(String phone, String code, String password) async {
+    Map<String, dynamic> param = {
+      "phone": phone,
+      "code": code,
+      "password": password
+    };
+
+    await dio.post('reset_password', queryParameters: param);
+  }
+
   static Future<List<BasketProducts>> removeBasketFood(int id, String token) async {
     Map<String, dynamic> params = {
      'food_id': id,

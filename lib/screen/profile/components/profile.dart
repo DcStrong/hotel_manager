@@ -65,7 +65,7 @@ class _ProfileState extends State<Profile> {
         backgroundColor: ConfigColor.bgColor,
         leading: null,
       ),
-      body: 
+      body:
       _isLoad
       ?
       Center(

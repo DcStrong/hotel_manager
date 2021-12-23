@@ -414,7 +414,7 @@ class ApiRouter {
     Map<String, dynamic> param = {
       "phone": phone,
       "code": code,
-      "password": password
+      "new_password": password
     };
 
     await dio.post('reset_password', queryParameters: param);

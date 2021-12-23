@@ -73,18 +73,20 @@ class _BasketScreenState extends State<BasketScreen> {
                             shadowDarkColor: ConfigColor.shadowDarkColor.withOpacity(0.6),
                           ),
                           child: Container(
-                            child: Row(children: [
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
                               Flexible(
                                 child: Container(
                                   padding: EdgeInsets.all(5),
                                   constraints: BoxConstraints(
                                     minHeight: 150,
-                                    maxHeight: 200,
+                                    maxHeight: 170,
                                   ),
                                   child: ClipRRect(
                                     borderRadius: BorderRadius.circular(10),
                                     child: Image.network(
-                                      _store.basketInFood[i].preview ?? '', 
+                                      _store.basketInFood[i].preview ?? '',
                                       fit: BoxFit.cover,
                                       errorBuilder: (BuildContext context, Object exception, StackTrace? stackTrace) {
                                         return Center(
@@ -104,7 +106,7 @@ class _BasketScreenState extends State<BasketScreen> {
                                     padding: EdgeInsets.all(5),
                                     constraints: BoxConstraints(
                                       minHeight: 150,
-                                      maxHeight: 200,
+                                      maxHeight: 250,
                                     ),
                                     child: Column(
                                       crossAxisAlignment: CrossAxisAlignment.center,

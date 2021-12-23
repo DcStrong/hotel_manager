@@ -40,7 +40,7 @@ class _ProductsScreenState extends State<ProductsScreen> {
       !_scrollController.position.outOfRange && _loadMore) {
       List<Food> result = [];
       result = await ApiRouter.getRestourantFoods(widget.id, page: page, categoryId: categoryId);
-  
+
       if(result.length > 0) {
         setState(() {
           foods.addAll(result);
@@ -82,6 +82,100 @@ class _ProductsScreenState extends State<ProductsScreen> {
     _scrollController.removeListener(_scrollListener);
     _scrollController.dispose();
     super.dispose();
+  }
+
+  exeptionRestorantAllert(BuildContext context, Basket basket) {
+    List<Food> basketFoods = basket.basketInFood;
+    double height = (basketFoods.length * 60) + 100;
+    showDialog(
+      context: context,
+      builder: (BuildContext _context) => AlertDialog(
+        title: Row(
+          children: [
+            Expanded(
+              child: Text('Товары из разных ресторанов нельзя совмещать', style: Theme.of(context).textTheme.headline1!.copyWith(fontSize: 14),)
+            ),
+            InkWell(
+              onTap: () {
+                Navigator.pop(_context);
+              },
+              child: Icon(Icons.cancel_outlined),
+            )
+          ],
+        ),
+        content: Container(
+          width: 400,
+          height: height,
+          constraints: BoxConstraints(
+            maxHeight: MediaQuery.of(context).size.height * 0.7,
+          ),
+          child: ListView.builder(
+            shrinkWrap: true,
+            itemCount: basketFoods.length,
+            itemBuilder: (ctx, i) {
+              return Padding(
+                padding: const EdgeInsets.only(top: 8.0),
+                child: Row(
+                  children: [
+                    Container(
+                      width: 60,
+                      height: 60,
+                      constraints: BoxConstraints(
+                        maxHeight: 90,
+                        minHeight: 40
+                      ),
+                      child: ClipRRect(
+                        borderRadius: BorderRadius.circular(10),
+                        child: Image.network(
+                          basketFoods[i].preview ?? '', fit: BoxFit.cover,
+                          errorBuilder: (BuildContext context, Object exception, StackTrace? stackTrace) {
+                            return Center(
+                              child: Image.asset(
+                                'assets/img/image_not_found.jpg',
+                                fit: BoxFit.fitWidth,
+                              )
+                            );
+                          },
+                        )
+                      ),
+                    ),
+                    Expanded(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.end,
+                        children: [
+                          Container(
+                            child: Text(basketFoods[i].title, style: Theme.of(context).textTheme.headline1!.copyWith(fontSize: 14),),
+                          ),
+                          Container(
+                            child: Text('${basketFoods[i].price} р.', style: Theme.of(context).textTheme.headline2!.copyWith(fontSize: 14),),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ],
+                ),
+              );
+            }
+          ),
+        ),
+        actions: <Widget>[
+          TextButton(
+            onPressed: () {
+              Navigator.pop(_context);
+              basket.clearBasketProduct();
+            },
+            child: Text('Очистить корзину'),
+          ),
+          TextButton(
+            onPressed: () {
+              Navigator.pop(_context);
+              Navigator.pushNamed(context, 'basket');
+            },
+            child: Text('Оформить заказ'),
+          ),
+        ],
+      )
+    );
   }
 
   allertDialog(BuildContext context) {
@@ -411,7 +505,11 @@ void showBottomSheet(DetailFood detail) {
                               context,
                               () async {
                                 if (user.userProfile.token != null) {
-                                  store.addBasketProduct(product);
+                                  if (store.basketInFood.length > 0 && store.basketInFood[0].restaurantId != product.restaurantId) {
+                                    exeptionRestorantAllert(context, store);
+                                  } else {
+                                    store.addBasketProduct(product);
+                                  }
                                 } else {
                                   allertDialog(context);
                                 }
